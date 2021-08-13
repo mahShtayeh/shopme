@@ -25,7 +25,7 @@ public class UserRepositoryTests {
 	private TestEntityManager entityManager; 
 	
 	@Test
-	public void testCreateUser() {
+	public void testCreateUserOneRole() {
 		Role adminRole = entityManager.find(Role.class, 1); 
 		User newUser = new User("newUser@email.com", "pass", "New", "User"); 
 		newUser.addRole(adminRole); 
@@ -33,5 +33,21 @@ public class UserRepositoryTests {
 		User savedUser = repo.save(newUser); 
 		
 		assertThat(savedUser.getId()).isGreaterThan(0); 
+	}
+	
+	@Test
+	public void testCreateUserTwoRoles() {
+		User newUser = new User("TwoRolesUser@email.com", "pass", "Two", "RolesUser"); 
+		
+		Role editorRole = new Role(3); 
+		Role assistantRole = new Role(5); 
+		
+		newUser.addRole(editorRole); 
+		newUser.addRole(assistantRole); 
+		
+		User savedUser = repo.save(newUser); 
+		
+		assertThat(savedUser.getId()).isGreaterThan(0); 
+		assertThat(savedUser.getRoles().size()).isEqualTo(2); 
 	}
 }
