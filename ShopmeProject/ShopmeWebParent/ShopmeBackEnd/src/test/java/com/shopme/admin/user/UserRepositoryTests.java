@@ -50,4 +50,42 @@ public class UserRepositoryTests {
 		assertThat(savedUser.getId()).isGreaterThan(0); 
 		assertThat(savedUser.getRoles().size()).isEqualTo(2); 
 	}
+	
+	@Test
+	public void testListAllUsers() {
+		Iterable<User> allUsers = repo.findAll();
+		allUsers.forEach(user -> System.out.println(user));
+	}
+	
+	@Test
+	public void testGetUserByID() {
+		User user = repo.findById(1).get(); 
+		System.out.println(user);
+		assertThat(user).isNotNull(); 
+	} 
+	
+	@Test
+	public void testUpdateUserDetials() {
+		User user = repo.findById(2).get(); 
+		user.setEnabled(true);
+		user.addRole(new Role(2)); 
+		
+		repo.save(user); 
+	}
+	
+	@Test
+	public void testRemoveUserRole() {
+		User user = repo.findById(2).get(); 
+		
+		user.getRoles().remove(new Role(3)); 
+		
+		repo.save(user); 
+	}
+	
+	@Test
+	public void testDeleteUser() {
+		Integer userId = 2; 
+		
+		repo.deleteById(userId);
+	}
 }
