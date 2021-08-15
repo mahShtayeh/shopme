@@ -4,7 +4,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 		
-		<title>Home - Shopme Admin</title>
+		<title>Manage Users</title>
 		
 		<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
 		
@@ -62,6 +62,11 @@
 		<div class="container-fluid">
 			<div>
 				<h2>Manage Users</h2>
+				<a th:href="@{/users/new}">Create New User</a>
+			</div>
+			
+			<div th:if="${message != null}" class="alert alert-success text-center">
+				[[${message}]]
 			</div>
 			
 			<div>
