@@ -17,6 +17,7 @@ import com.shopme.common.entity.Role;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Rollback(false)
 public class RoleRepositoryTests {
+	
 	@Autowired
 	private RolesRepository repo; 
 	
