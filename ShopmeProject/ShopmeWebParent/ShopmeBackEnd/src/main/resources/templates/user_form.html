@@ -65,7 +65,7 @@
 			</div>
 			
 			<form th:action="@{/users/save}" method="post" style="max-width: 850px; margin: 0 auto;"
-				th:object="${user}">
+				th:object="${user}" onsubmit="return checkEmailDuplicate(this);">
 				<div class="border border-secondary rounded p-3">
 					<div class="form-group row">
 						<label class="col-sm-4 col-form-label">E-mail: </label>
@@ -138,6 +138,22 @@
 				}); 
 			}
 		); 
+		
+		function checkEmailDuplicate(form) {
+			url = "[[@{/users/check_email}]]";
+			userEmail = $("#email").val(); 
+			csrfValue = $("input[name = '_csrf']").val(); 
+			params = {email: userEmail, _csrf: csrfValue}; 
+			
+			$.post(url, params, function(response) {
+				if(response == "OK") {
+					form.submit(); 
+				} else if(response == "Dublicated") {
+					alert("The E-mail [" + userEmail + "] is already used"); 
+				}
+			}); 
+			return false; 
+		}
 	</script>
 	</body>
 </html>
