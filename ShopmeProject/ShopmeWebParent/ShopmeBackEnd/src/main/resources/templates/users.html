@@ -8,6 +8,7 @@
 		
 		<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
 		<link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
 		
 		<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
 		<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
@@ -87,14 +88,19 @@
 					<tbody>
 						<tr th:each="user : ${listUsers}">
 							<td>[[${user.id}]]</td>
-							<td><span class="fas fa-portrait fa-3x"></span></td>
+							<td><span class="fas fa-portrait fa-3x icon-silver"></span></td>
 							<td>[[${user.email}]]</td>
 							<td>[[${user.firstName}]]</td>
 							<td>[[${user.lastName}]]</td>
 							<td>[[${user.roles}]]</td>
-							<td>[[${user.enabled}]]</td>
 							<td>
-								Edit &nbsp; Delete
+								<a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-blue" href=""></a>
+								<a th:if="${user.enabled == false}" class="fas fa-circle fa-2x icon-dark" href=""></a>
+							</td>
+							<td>
+								<a class="fas fa-user-edit fa-2x icon-green" th:href="@{/user/edit}"></a> 
+								&nbsp; 
+								<a class="fas fa-user-minus fa-2x icon-red" th:href="@{/user/delete}"></a>
 							</td>
 						</tr>
 					</tbody>
