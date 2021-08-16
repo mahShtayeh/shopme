@@ -31,7 +31,20 @@ public class UserService {
 	}
 
 	public void saveUser(User user) {
-		encodePassword(user);
+		boolean isUpdatingUser = (user.getId() != null); 
+		
+		if(isUpdatingUser) {
+			User existingUser = userRepo.findById(user.getId()).get(); 
+			
+			if(user.getPassword().isEmpty()) {
+				user.setPassword(existingUser.getPassword());
+			} else {
+				encodePassword(user);
+			}
+		} else {
+			encodePassword(user);
+		}
+		
 		userRepo.save(user); 
 	}
 	
