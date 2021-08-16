@@ -40,10 +40,22 @@ public class UserService {
 		user.setPassword(encodedPssword); 
 	}
 	
-	public boolean isEmailUnique(String email) {
+	public boolean isEmailUnique(Integer id, String email) {
 		User userByEmail = userRepo.getUserByEmail(email); 
 		
-		return userByEmail == null; 
+		if(userByEmail == null) return true; 
+		
+		boolean isCreatingNewUser = (id == null); 
+		
+		if(isCreatingNewUser) {
+			if(userByEmail != null) 
+					return false; 
+		} else {
+			if(userByEmail.getId() != id) 
+				return false; 
+		}
+		
+		return true; 
 	}
 
 	public User getUser(Integer id) throws UserNotFoundException {
