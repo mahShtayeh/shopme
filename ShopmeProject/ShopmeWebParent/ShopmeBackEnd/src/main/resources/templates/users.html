@@ -120,6 +120,14 @@
 			</table>
 		</div>
 	</div>
+	
+	<div class="text-center m-1" th:if="${totalItems > 0}">
+		<span>Showing # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+	</div>
+	
+	<div class="text-center m-1" th:unless="${totalItems > 0}">
+		<span>No Users Found</span>
+	</div>
 
 	<div class="modal fade text-center" id="confirmationDialog">
 		<div class="modal-dialog">

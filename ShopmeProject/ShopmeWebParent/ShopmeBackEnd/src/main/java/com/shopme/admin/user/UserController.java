@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -26,11 +27,7 @@ public class UserController {
 	
 	@GetMapping("/users") 
 	public String listAll(Model model) {
-		List<User> listUsers = service.listUsers(); 
-		
-		model.addAttribute("listUsers", listUsers); 
-		
-		return "users"; 
+		return getUsersPage(0, model); 
 	}
 	
 	@GetMapping("/users/new") 
@@ -43,6 +40,25 @@ public class UserController {
 		model.addAttribute("pageTitle", "Create New User"); 
 		
 		return "user_form"; 
+	}
+	
+	@GetMapping("/users/page/{pageNum}")
+	public String getUsersPage(@PathVariable("pageNum") int pageNum, Model model) {
+		Page<User> usersPage = service.getUsersByPage(pageNum); 
+		
+		List<User> listUsers = usersPage.getContent(); 
+		
+		long startCount = pageNum * UserService.USER_PER_PAGE + 1;
+		long endCount = startCount + UserService.USER_PER_PAGE - 1; 
+		if(endCount > usersPage.getTotalElements()) 
+			endCount = usersPage.getTotalElements(); 
+		
+		model.addAttribute("startCount", startCount); 
+		model.addAttribute("endCount", endCount); 
+		model.addAttribute("totalItems", usersPage.getTotalElements()); 
+		model.addAttribute("listUsers", listUsers); 
+		
+		return "users"; 
 	}
 	
 	@PostMapping("/users/save")
