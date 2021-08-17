@@ -72,7 +72,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/users/delete/{id}")
-	public String deleteUser(@PathVariable(name = "id") Integer id, 
+	public String deleteUser(@PathVariable("id") Integer id, 
 			RedirectAttributes redirectAttributes) {
 		try {
 			service.deleteUser(id); 
@@ -80,6 +80,17 @@ public class UserController {
 		} catch (UserNotFoundException e) {
 			redirectAttributes.addFlashAttribute("message", e.getMessage()); 
 		} 
+		
+		return "redirect:/users"; 
+	}
+	
+	@GetMapping("/users/{id}/enabled/{status}")
+	public String enableUser(@PathVariable("id") Integer id, 
+			@PathVariable("status") boolean status, 
+			RedirectAttributes redirectAttributes) {
+		service.updateUseEnabledStatus(id, status); 
+		redirectAttributes.addFlashAttribute("message", "User with ID [" + id + "] has been " + 
+				(status ? "Enabled" : "Disabled")); 
 		
 		return "redirect:/users"; 
 	}

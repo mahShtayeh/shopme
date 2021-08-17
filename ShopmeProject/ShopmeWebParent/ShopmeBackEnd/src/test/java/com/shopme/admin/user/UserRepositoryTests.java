@@ -104,4 +104,9 @@ public class UserRepositoryTests {
 		
 		assertThat(countById).isNotNull().isGreaterThan(0); 
 	}
+	
+	@Test
+	public void updateUserEnabledStatus() {
+		repo.updateEnabledById(4, false);
+	}
 }
