@@ -127,7 +127,27 @@
 	
 	<div class="text-center m-1" th:unless="${totalItems > 0}">
 		<span>No Users Found</span>
-	</div>
+	</div> 
+	
+	<nav>
+	  <ul class="pagination justify-content-center">
+	    <li class="page-item">
+	    	<a class="page-link" th:href="@{/users/page/1}">First</a>
+	    </li>
+	    <li class="page-item">
+	    	<a class="page-link" th:href="@{'/users/page/' + ${currentPage - 1}}">Previous</a>
+	    </li>
+	    <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}">
+	    	<a class="page-link" th:href="@{'/users/page/' + ${i}}">[[${i}]]</a>
+	    </li>
+	    <li class="page-item">
+	    	<a class="page-link" th:href="@{'/users/page/' + ${currentPage + 1}}">Next</a>
+	    </li>
+	    <li class="page-item">
+	    	<a class="page-link" th:href="@{'/users/page/' + ${totalPages}}">Last</a>
+	    </li>
+	  </ul>
+	</nav>
 
 	<div class="modal fade text-center" id="confirmationDialog">
 		<div class="modal-dialog">

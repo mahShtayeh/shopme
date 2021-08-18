@@ -44,15 +44,17 @@ public class UserController {
 	
 	@GetMapping("/users/page/{pageNum}")
 	public String getUsersPage(@PathVariable("pageNum") int pageNum, Model model) {
-		Page<User> usersPage = service.getUsersByPage(pageNum); 
+		Page<User> usersPage = service.getUsersByPage(pageNum -1); 
 		
 		List<User> listUsers = usersPage.getContent(); 
 		
-		long startCount = pageNum * UserService.USER_PER_PAGE + 1;
+		long startCount = (pageNum -1) * UserService.USER_PER_PAGE + 1;
 		long endCount = startCount + UserService.USER_PER_PAGE - 1; 
 		if(endCount > usersPage.getTotalElements()) 
 			endCount = usersPage.getTotalElements(); 
 		
+		model.addAttribute("totalPages", usersPage.getTotalPages()); 
+		model.addAttribute("currentPage", pageNum); 
 		model.addAttribute("startCount", startCount); 
 		model.addAttribute("endCount", endCount); 
 		model.addAttribute("totalItems", usersPage.getTotalElements()); 
