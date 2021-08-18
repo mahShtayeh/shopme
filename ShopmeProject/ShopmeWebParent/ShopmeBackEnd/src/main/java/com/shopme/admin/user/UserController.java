@@ -27,7 +27,7 @@ public class UserController {
 	
 	@GetMapping("/users") 
 	public String listAll(Model model) {
-		return getUsersPage(0, model); 
+		return getUsersPage(1, model); 
 	}
 	
 	@GetMapping("/users/new") 
