@@ -59,11 +59,16 @@ public class UserController {
 		if(endCount > usersPage.getTotalElements()) 
 			endCount = usersPage.getTotalElements(); 
 		
+		String reverseSortDir = sortDir.equals("desc") ? "asc" : "desc"; 
+		
 		model.addAttribute("totalPages", usersPage.getTotalPages()); 
 		model.addAttribute("currentPage", pageNum); 
 		model.addAttribute("startCount", startCount); 
 		model.addAttribute("endCount", endCount); 
 		model.addAttribute("totalItems", usersPage.getTotalElements()); 
+		model.addAttribute("sortField", sortField); 
+		model.addAttribute("sortDir", sortDir); 
+		model.addAttribute("reverseSortDir", reverseSortDir); 
 		model.addAttribute("listUsers", listUsers); 
 		
 		return "users"; 

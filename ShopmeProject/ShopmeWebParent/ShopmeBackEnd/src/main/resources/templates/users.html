@@ -77,13 +77,73 @@
 			<table class="table table-bordered table-striped table-hover table-responsive-xl">
 				<thead class="thead-dark">
 					<tr>
-						<th>User ID</th>
+						<th>
+							<a th:if="${sortField != 'id'}" class="text-white"
+								th:href="@{'/users/page/' + ${currentPage} + '?sortField=id&sortDir=asc'}">
+								User ID
+							</a>
+
+							<a th:if="${sortField == 'id'}" class="text-white"
+								th:href="@{'/users/page/' + ${currentPage} + '?sortField=id&sortDir=' + ${reverseSortDir}}">
+								User ID
+							</a>
+							<span th:if="${sortField == 'id'}"
+								th:class="${sortDir == 'desc' ? 'fas fa-sort-down' : 'fas fa-sort-up'}"></span>
+						</th>
 						<th>Photos</th>
-						<th>Email</th>
-						<th>First Name</th>
-						<th>Last Name</th>
+						<th>
+							<a th:if="${sortField != 'email'}" class="text-white"
+								th:href="@{'/users/page/' + ${currentPage} + '?sortField=email&sortDir=asc'}">
+								E-mail
+							</a>
+
+							<a th:if="${sortField == 'email'}" class="text-white"
+								th:href="@{'/users/page/' + ${currentPage} + '?sortField=email&sortDir=' + ${reverseSortDir}}">
+								E-mail
+							</a>
+							<span th:if="${sortField == 'email'}"
+								th:class="${sortDir == 'desc' ? 'fas fa-sort-down' : 'fas fa-sort-up'}"></span>
+						</th>
+						<th>
+							<a th:if="${sortField != 'firstName'}" class="text-white"
+								th:href="@{'/users/page/' + ${currentPage} + '?sortField=firstName&sortDir=asc'}">
+								First Name
+							</a>
+
+							<a th:if="${sortField == 'firstName'}" class="text-white"
+								th:href="@{'/users/page/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${reverseSortDir}}">
+								First Name
+							</a>
+							<span th:if="${sortField == 'firstName'}"
+								th:class="${sortDir == 'desc' ? 'fas fa-sort-down' : 'fas fa-sort-up'}"></span>
+						</th>
+						<th>
+							<a th:if="${sortField != 'lastName'}" class="text-white"
+								th:href="@{'/users/page/' + ${currentPage} + '?sortField=lastName&sortDir=asc'}">
+								Last Name
+							</a>
+
+							<a th:if="${sortField == 'lastName'}" class="text-white"
+								th:href="@{'/users/page/' + ${currentPage} + '?sortField=lastName&sortDir=' + ${reverseSortDir}}">
+								Last Name
+							</a>
+							<span th:if="${sortField == 'lastName'}"
+								th:class="${sortDir == 'desc' ? 'fas fa-sort-down' : 'fas fa-sort-up'}"></span>
+						</th>
 						<th>Roles</th>
-						<th>Enabled</th>
+						<th>
+							<a th:if="${sortField != 'enabled'}" class="text-white"
+								th:href="@{'/users/page/' + ${currentPage} + '?sortField=enabled&sortDir=asc'}">
+								Enabled
+							</a>
+
+							<a th:if="${sortField == 'enabled'}" class="text-white"
+								th:href="@{'/users/page/' + ${currentPage} + '?sortField=enabled&sortDir=' + ${reverseSortDir}}">
+								Enabled
+							</a>
+							<span th:if="${sortField == 'enabled'}"
+								th:class="${sortDir == 'desc' ? 'fas fa-sort-down' : 'fas fa-sort-up'}"></span>
+						</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -98,14 +158,10 @@
 						<td>[[${user.lastName}]]</td>
 						<td>[[${user.roles}]]</td>
 						<td>
-							<a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-blue" 
-								th:href="@{'/users/' + ${user.id} + '/enabled/false'}"
-								title="Disable this user"
-								></a>
-							<a th:if="${user.enabled == false}" class="fas fa-circle fa-2x icon-dark" 
-								th:href="@{'/users/' + ${user.id} + '/enabled/true'}"
-								title="Enable this user"
-								></a>
+							<a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-blue"
+								th:href="@{'/users/' + ${user.id} + '/enabled/false'}" title="Disable this user"></a>
+							<a th:if="${user.enabled == false}" class="fas fa-circle fa-2x icon-dark"
+								th:href="@{'/users/' + ${user.id} + '/enabled/true'}" title="Enable this user"></a>
 						</td>
 						<td>
 							<a class="fas fa-user-edit fa-2x icon-green" th:href="@{'/users/edit/' + ${user.id}}"
@@ -120,25 +176,24 @@
 			</table>
 		</div>
 	</div>
-	
+
 	<div class="text-center m-1" th:if="${totalItems > 0}">
 		<span>Showing # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
 	</div>
-	
+
 	<div class="text-center m-1" th:unless="${totalItems > 0}">
 		<span>No Users Found</span>
-	</div> 
-	
+	</div>
+
 	<nav>
-	  <ul class="pagination justify-content-center">
-	    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-	    	<a class="page-link" th:href="@{/users/page/1}">First</a>
-	    </li>
-	    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-	    	<a class="page-link" th:href="@{'/users/page/' + ${currentPage - 1}}">Previous</a>
-	    </li>
-	    <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}" 
-	    	th:each="i : ${#numbers.sequence(1, totalPages)}">
+		<ul class="pagination justify-content-center">
+			<li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+				<a class="page-link" th:href="@{/users/page/1}">First</a>
+			</li>
+			<li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+				<a class="page-link" th:href="@{'/users/page/' + ${currentPage - 1}}">Previous</a>
+			</li>
+			<li th:class="${currentPage != i ? 'page-item' : 'page-item active'}" th:each="i : ${#numbers.sequence(1, totalPages)}">
 	    	<a class="page-link" th:href="@{'/users/page/' + ${i}}">[[${i}]]</a>
 	    </li>
 	    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
@@ -178,13 +233,13 @@
 		$(document).ready(function () {
 			$(".link-delete").on("click", function (e) {
 				e.preventDefault();
-				
-				link = $(this); 
-				userId = link.attr("userId"); 
-				
-				$("#yesBtn").attr("href", link.attr("href")); 
-				$("#modalBody").text("Are you sure you want to delete the user with ID [" + userId + "] ?"); 
-				$("#confirmationDialog").modal(); 
+
+				link = $(this);
+				userId = link.attr("userId");
+
+				$("#yesBtn").attr("href", link.attr("href"));
+				$("#modalBody").text("Are you sure you want to delete the user with ID [" + userId + "] ?");
+				$("#confirmationDialog").modal();
 			});
 		}); 
 	</script>
