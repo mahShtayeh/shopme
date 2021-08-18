@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -27,7 +28,7 @@ public class UserController {
 	
 	@GetMapping("/users") 
 	public String listAll(Model model) {
-		return getUsersPage(1, model); 
+		return getUsersPage(1, model, "firstName", "asc"); 
 	}
 	
 	@GetMapping("/users/new") 
@@ -43,8 +44,13 @@ public class UserController {
 	}
 	
 	@GetMapping("/users/page/{pageNum}")
-	public String getUsersPage(@PathVariable("pageNum") int pageNum, Model model) {
-		Page<User> usersPage = service.getUsersByPage(pageNum -1); 
+	public String getUsersPage(@PathVariable("pageNum") int pageNum, Model model,
+			@Param("sortField") String sortField, @Param("sortDir") String sortDir) {
+		
+		System.out.println("sort field: " + sortField);
+		System.out.println("sort dir: " + sortDir);
+		
+		Page<User> usersPage = service.getUsersByPage(pageNum -1, sortField, sortDir); 
 		
 		List<User> listUsers = usersPage.getContent(); 
 		
