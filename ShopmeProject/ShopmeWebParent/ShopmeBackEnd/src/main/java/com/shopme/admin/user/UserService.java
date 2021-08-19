@@ -104,12 +104,15 @@ public class UserService {
 		userRepo.updateEnabledById(id, enabled);
 	}
 	
-	public Page<User> getUsersByPage(int pageNum, String sortField, String sortDir) {
+	public Page<User> getUsersByPage(int pageNum, String sortField, String sortDir, String keyword) {
 		Sort sort = Sort.by(sortField); 
 		
 		sort = sortDir.equals("desc") ? sort.descending() : sort.ascending(); 
 		
 		Pageable pageConf = PageRequest.of(pageNum, USER_PER_PAGE, sort); 
+		
+		if(keyword != null) 
+			return userRepo.findAll(keyword, pageConf); 
 		
 		return userRepo.findAll(pageConf); 
 	}
