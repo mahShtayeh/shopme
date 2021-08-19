@@ -83,7 +83,7 @@
 				&nbsp;&nbsp;
 				<input type="submit" value="Search" class="btn btn-primary" />
 				&nbsp;&nbsp;
-				<input type="button" value="Clear" class="btn btn-secondary" /> 
+				<input type="button" value="Clear" class="btn btn-secondary" onclick="clearFilter()" /> 
 			</form>
 		</div>
 
@@ -265,12 +265,18 @@
 
 				link = $(this);
 				userId = link.attr("userId");
-
+				
 				$("#yesBtn").attr("href", link.attr("href"));
 				$("#modalBody").text("Are you sure you want to delete the user with ID [" + userId + "] ?");
 				$("#confirmationDialog").modal();
 			});
 		}); 
+		
+		function clearFilter() {
+			//let url = "[[@{'/users/page/1?sortField=' + ${sortField} + 'sortDir=' + ${sortDir}}]]";
+			let url = "[[@{/users}]]";
+			window.location.replace(url); 
+		}
 	</script>
 </body>
 
