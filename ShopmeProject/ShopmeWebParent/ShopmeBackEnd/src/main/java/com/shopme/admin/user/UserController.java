@@ -51,9 +51,6 @@ public class UserController {
 			@Param("keyword") String keyword, 
 			Model model) {
 		
-		System.out.println("sort field: " + sortField);
-		System.out.println("sort dir: " + sortDir);
-		
 		Page<User> usersPage = service.getUsersByPage(pageNum -1, sortField, sortDir, keyword); 
 		
 		List<User> listUsers = usersPage.getContent(); 
@@ -95,13 +92,20 @@ public class UserController {
 			FileUploadUtil.cleanDir(uploadDir); 
 			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 		} else {
+			user.setPhotos(null); 
+			
 			service.saveUser(user); 
 		}
 		
 		redirectAttributes.addFlashAttribute("message", 
 				"The user [" + user.getFirstName() + "] has been added successfully"); 
 		
-		return "redirect:/users"; 
+		return getRedirectUrlToAffectedUser(user); 
+	}
+
+	private String getRedirectUrlToAffectedUser(User user) {
+		String firstPartOfEmail = user.getEmail().split("@")[0]; 
+		return "redirect:/users/page/1?sortField=id&sortDir=asc&keyword=" + firstPartOfEmail;
 	}
 	
 	@GetMapping("/users/edit/{id}")
