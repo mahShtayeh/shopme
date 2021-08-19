@@ -93,13 +93,13 @@ public class UserRepositoryTests {
 	public void testDeleteUser() {
 		Integer userId = 2; 
 		
-		repo.deleteById(userId);
+		repo.deleteById(userId); 
 	}
 	
 	@Test 
 	public void testGetUserByEmail() {
 		String email = "newUser@email.com"; 
-		User user = repo.getUserByEmail(email); 
+		User user = repo.findByEmail(email); 
 		
 		assertThat(user).isNotNull(); 
 	}
@@ -131,5 +131,22 @@ public class UserRepositoryTests {
 		usersList.forEach(user -> System.out.println(user));
 		
 		assertThat(usersList.size()).isEqualTo(pageSize); 
+	}
+	
+	@Test
+	public void testSearchUser() {
+		String keyword = "bruce"; 
+		
+		int pageNum = 0; 
+		int pageSize = 4; 
+		
+		Pageable pageable = PageRequest.of(pageNum, pageSize); 
+		Page<User> page = repo.findByFirstNameLikeOrLastNameLike(keyword, keyword, pageable); 
+		
+		List<User> userList = page.getContent(); 
+		
+		userList.forEach(user -> System.out.println(user));
+		
+		assertThat(userList.size()).isGreaterThan(0); 
 	}
 }
