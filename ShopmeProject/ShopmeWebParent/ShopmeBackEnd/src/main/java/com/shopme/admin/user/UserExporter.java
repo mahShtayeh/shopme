@@ -1,5 +1,6 @@
 package com.shopme.admin.user;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -21,6 +22,17 @@ import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfTable;
+import com.lowagie.text.pdf.PdfWriter;
 import com.shopme.common.entity.User;
 
 public class UserExporter {
@@ -123,5 +135,76 @@ public class UserExporter {
 		String headerValue = "attachment; filename=" + fileName; 
 		
 		response.setHeader(headerKey, headerValue); 
+	}
+
+	public static void exportToPDF(List<User> usersList, HttpServletResponse response) throws IOException {
+		UserExporter.setResponseHeader(response, "application/pdf", ".pdf");
+		
+		Document document = new Document(PageSize.A4); 
+		PdfWriter.getInstance(document, response.getOutputStream()); 
+		
+		document.open(); 
+		
+		Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD); 
+		font.setSize(18); 
+		font.setColor(Color.BLUE); 
+		
+		Paragraph paragraph = new Paragraph("List of users", font); 
+		paragraph.setAlignment(Paragraph.ALIGN_CENTER); 
+		
+		document.add(paragraph); 
+		
+		PdfPTable table = new PdfPTable(6); 
+		table.setWidthPercentage(100f); 
+		table.setSpacingBefore(10); 
+		table.setWidths(new float[] {
+				1.2f, 3.5f, 3.0f, 3.0f, 3.0f, 1.7f
+		}); 
+		
+		UserExporter.writeTableHeader(table); 
+		UserExporter.writeTableData(table, usersList); 
+		
+		document.add(table); 
+		
+		document.close();
+	}
+
+	private static void writeTableData(PdfPTable table, List<User> usersList) {
+		for(User user : usersList) {
+			table.addCell(String.valueOf(user.getId()));
+			table.addCell(user.getEmail());
+			table.addCell(user.getFirstName());
+			table.addCell(user.getLastName());
+			table.addCell(user.getRoles().toString());
+			table.addCell(String.valueOf(user.isEnabled()));
+		}
+	}
+
+	private static void writeTableHeader(PdfPTable table) {
+		PdfPCell cell = new PdfPCell(); 
+		
+		cell.setBackgroundColor(Color.BLUE);
+		cell.setPadding(5);
+		
+		Font font = FontFactory.getFont(FontFactory.HELVETICA); 
+		font.setColor(Color.WHITE); 
+		
+		cell.setPhrase(new Phrase("ID", font)); 
+		table.addCell(cell);
+		
+		cell.setPhrase(new Phrase("E-mail", font)); 
+		table.addCell(cell);
+		
+		cell.setPhrase(new Phrase("First Name", font)); 
+		table.addCell(cell);
+		
+		cell.setPhrase(new Phrase("Last Name", font)); 
+		table.addCell(cell);
+		
+		cell.setPhrase(new Phrase("Roles", font)); 
+		table.addCell(cell);
+		
+		cell.setPhrase(new Phrase("Enabled", font)); 
+		table.addCell(cell);
 	}
 }
