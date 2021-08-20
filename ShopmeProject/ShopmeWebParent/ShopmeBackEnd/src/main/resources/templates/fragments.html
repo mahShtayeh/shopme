@@ -72,4 +72,8 @@
 				title="Delete this user"></a>
 		</td>
 	</tr>
+	
+	<li th:fragment="nav_link(url, label)" class="nav-item">
+		<a class="nav-link" th:href="@{/url}">[[${label}]]</a>
+	</li>
 </body>
