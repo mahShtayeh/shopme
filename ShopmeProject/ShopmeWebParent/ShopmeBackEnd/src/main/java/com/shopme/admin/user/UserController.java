@@ -3,6 +3,8 @@ package com.shopme.admin.user;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -92,7 +94,8 @@ public class UserController {
 			FileUploadUtil.cleanDir(uploadDir); 
 			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 		} else {
-			user.setPhotos(null); 
+			if(user.getPhotos() == null) 
+				user.setPhotos(null); 
 			
 			service.saveUser(user); 
 		}
@@ -150,5 +153,14 @@ public class UserController {
 				(status ? "Enabled" : "Disabled")); 
 		
 		return "redirect:/users"; 
+	}
+	
+	@GetMapping("/users/export/csv")
+	public void exportToCSV(HttpServletResponse response) throws IOException {
+		List<User> usersList = service.listUsers(); 
+		
+		UserCSVExporter exporter = new UserCSVExporter(); 
+		
+		exporter.export(usersList, response); 
 	}
 }

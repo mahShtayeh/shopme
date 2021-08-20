@@ -67,6 +67,12 @@
 		<div>
 			<h2>Manage Users</h2>
 			<a th:href="@{/users/new}">Create New User</a>
+			&nbsp; |  &nbsp; 
+			<a th:href="@{/users/export/csv}">Export to CSV</a>
+			&nbsp; |  &nbsp; 
+			<a th:href="@{/users/export/excel}">Export to Excel</a>
+			&nbsp; |  &nbsp; 
+			<a th:href="@{/users/export/pdf}">Export to PDF</a>
 		</div>
 
 		<div th:if="${message != null}" class="alert alert-success text-center">
@@ -105,7 +111,8 @@
 					<tr th:each="user : ${listUsers}">
 						<td>[[${user.id}]]</td>
 						<td>
-							<img th:src="@{${user.photosImagePath}}" style="width: 96px; height: 96px;" />
+							<img th:src="@{${user.photosImagePath == null ? 'images/default-user.png' : user.photosImagePath}}" 
+								style="width: 96px; height: 96px;" />
 						</td>
 						<td>[[${user.email}]]</td>
 						<td>[[${user.firstName}]]</td>
