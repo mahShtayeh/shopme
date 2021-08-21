@@ -94,7 +94,7 @@ public class UserController {
 			FileUploadUtil.cleanDir(uploadDir); 
 			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 		} else {
-			if(user.getPhotos() == null) 
+			if(user.getPhotos().isEmpty()) 
 				user.setPhotos(null); 
 			
 			service.saveUser(user); 
