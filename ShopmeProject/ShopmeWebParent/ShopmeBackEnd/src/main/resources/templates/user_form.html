@@ -12,49 +12,33 @@
 		<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 	</head>
 	<body>
+		<!--Nav bar div-->
 		<div>
 			<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+				<!--Nav bar Logo-->
 				<a class="navbar-brand" th:href="@{/}">
-					<img th:src="@{/images/ShopmeAdminSmall.png}"/>
+					<img th:src="@{/images/ShopmeAdminSmall.png}" />
 				</a>
+				
+				<!--Nav bar button - mobile responsive-->
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
 					<span class="navbar-toggler-icon"></span>
 				</button>
+				
+				<!--Nav bar-->
 				<div id="topNavbar" class="collapse navbar-collapse">
 					<ul class="navbar-nav">
-						<li class="nav-item">
-							<a class="nav-link" th:href="@{/users}">Users</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" th:href="@{/categories}">Categories</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" th:href="@{/brands}">Brands</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" th:href="@{/products}">Products</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" th:href="@{/customers}">Customers</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" th:href="@{/shipping}">Shipping</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" th:href="@{/orders}">Orders</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" th:href="@{/report}">Sales Report</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" th:href="@{/articles}">Articles</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" th:href="@{/menus}">Menus</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" th:href="@{/settings}">Settings</a>
-						</li>
+						<li th:replace="fragments :: nav_link('/users', 'Users')" />
+						<li th:replace="fragments :: nav_link('/categories', 'Categories')" />
+						<li th:replace="fragments :: nav_link('/brands', 'Brands')" />
+						<li th:replace="fragments :: nav_link('/products', 'Products')" />
+						<li th:replace="fragments :: nav_link('/customers', 'Customers')" />
+						<li th:replace="fragments :: nav_link('/shipping', 'Shipping')" />
+						<li th:replace="fragments :: nav_link('/orders', 'Orders')" />
+						<li th:replace="fragments :: nav_link('/report', 'Sales Report')" />
+						<li th:replace="fragments :: nav_link('/articles', 'Articles')" />
+						<li th:replace="fragments :: nav_link('/menus', 'Menus')" />
+						<li th:replace="fragments :: nav_link('/settings', 'Settings')" />
 					</ul>
 				</div>
 			</nav>
