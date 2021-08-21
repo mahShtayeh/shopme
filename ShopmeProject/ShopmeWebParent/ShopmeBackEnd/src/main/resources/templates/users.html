@@ -24,7 +24,7 @@
 				<img th:src="@{/images/ShopmeAdminSmall.png}" />
 			</a>
 			
-			<!--Nav bar mobile responsive button-->
+			<!--Nav bar button - mobile responsive-->
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -113,7 +113,7 @@
 		</div>
 	</div>
 	
-	<!--Pagin label-->
+	<!--Pagination label-->
 	<div class="text-center m-1" th:if="${totalItems > 0}">
 		<span>Showing # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
 	</div>
