@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<body>
+		<!--Nav bar div-->
+		<div th:fragment="nav_bar">
+			<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+				<!--Logout Form-->
+				<form th:action="@{/logout}" method="POST" th:hidden="true" name="logoutForm">
+					<input type="submit" />
+				</form>
+			
+				<!--Nav bar Logo-->
+				<a class="navbar-brand" th:href="@{/}">
+					<img th:src="@{/images/ShopmeAdminSmall.png}" />
+				</a>
+				
+				<!--Nav bar button - mobile responsive-->
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				
+				<!--Nav bar-->
+				<div id="topNavbar" class="collapse navbar-collapse">
+					<ul class="navbar-nav">
+						<li th:replace="fragments :: nav_link('/users', 'Users')" />
+						<li th:replace="fragments :: nav_link('/categories', 'Categories')" />
+						<li th:replace="fragments :: nav_link('/brands', 'Brands')" />
+						<li th:replace="fragments :: nav_link('/products', 'Products')" />
+						<li th:replace="fragments :: nav_link('/customers', 'Customers')" />
+						<li th:replace="fragments :: nav_link('/shipping', 'Shipping')" />
+						<li th:replace="fragments :: nav_link('/orders', 'Orders')" />
+						<li th:replace="fragments :: nav_link('/report', 'Sales Report')" />
+						<li th:replace="fragments :: nav_link('/articles', 'Articles')" />
+						<li th:replace="fragments :: nav_link('/menus', 'Menus')" />
+						<li th:replace="fragments :: nav_link('/settings', 'Settings')" />
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" data-toggle="dropdown" 
+								sec:authentication="principal.fullName"></a>
+							<div class="dropdown-menu">
+								<a id="logoutLink" class="dropdown-item" th:href="@{/logout}">Logout</a>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+	</body>
+</html>

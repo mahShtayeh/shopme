@@ -1,48 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-		
-		<title>[[${pageTitle}]]</title>
-		
-		<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
-		
-		<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
-		<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-	</head>
+
+	<head th:replace="fragments :: page_head(${pageTitle})"/>
+	
 	<body>
+	
 		<!--Nav bar div-->
-		<div>
-			<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-				<!--Nav bar Logo-->
-				<a class="navbar-brand" th:href="@{/}">
-					<img th:src="@{/images/ShopmeAdminSmall.png}" />
-				</a>
-				
-				<!--Nav bar button - mobile responsive-->
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				
-				<!--Nav bar-->
-				<div id="topNavbar" class="collapse navbar-collapse">
-					<ul class="navbar-nav">
-						<li th:replace="fragments :: nav_link('/users', 'Users')" />
-						<li th:replace="fragments :: nav_link('/categories', 'Categories')" />
-						<li th:replace="fragments :: nav_link('/brands', 'Brands')" />
-						<li th:replace="fragments :: nav_link('/products', 'Products')" />
-						<li th:replace="fragments :: nav_link('/customers', 'Customers')" />
-						<li th:replace="fragments :: nav_link('/shipping', 'Shipping')" />
-						<li th:replace="fragments :: nav_link('/orders', 'Orders')" />
-						<li th:replace="fragments :: nav_link('/report', 'Sales Report')" />
-						<li th:replace="fragments :: nav_link('/articles', 'Articles')" />
-						<li th:replace="fragments :: nav_link('/menus', 'Menus')" />
-						<li th:replace="fragments :: nav_link('/settings', 'Settings')" />
-					</ul>
-				</div>
-			</nav>
-		</div>
+		<div th:replace="navigation :: nav_bar"/>
+		
 		<div class="container-fluid">
 			<div>
 				<h2>Manage Users | [[${pageTitle}]]</h2>
@@ -146,9 +111,8 @@
 			</div>
 		</div>
 		
-		<div class="text-center">
-			<p>Shopme Control Panel - Copyrigth &copy; Shopme</p>
-		</div>
+		<!--Footer-->
+		<div th:replace="fragments :: footer" />
 		
 		<script type="text/javascript">
 		$(document).ready(
