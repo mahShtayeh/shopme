@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.shopme.admin.FileUploadUtil;
+import com.shopme.admin.security.ShopmeUserDetails;
 import com.shopme.common.entity.Role;
 import com.shopme.common.entity.User;
 
@@ -171,5 +173,37 @@ public class UserController {
 	public void exportToPDF(HttpServletResponse response) throws IOException {
 		List<User> usersList = service.listUsers(); 
 		UserExporter.exportToPDF(usersList, response); 
+	}
+
+	@PostMapping("/account/update")
+	public String updateAccount(User user, 
+			@AuthenticationPrincipal ShopmeUserDetails loggedUser, 
+			RedirectAttributes redirectAttributes, 
+			@RequestParam("image") MultipartFile multipartFile) throws IOException {
+		
+		if(!multipartFile.isEmpty()) {
+			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename()); 
+			
+			user.setPhotos(fileName); 
+			User savedUser = service.updateAccount(user); 
+			
+			String uploadDir = "user-photos/" + savedUser.getId(); 
+			
+			FileUploadUtil.cleanDir(uploadDir); 
+			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+		} else {
+			if(user.getPhotos().isEmpty()) 
+				user.setPhotos(null); 
+			
+			service.updateAccount(user); 
+		}
+		
+		loggedUser.setFirstName(user.getFirstName());
+		loggedUser.setLastName(user.getLastName());
+		
+		redirectAttributes.addFlashAttribute("message", 
+				"Your account details have been updated"); 
+		
+		return "redirect:/account"; 
 	}
 }

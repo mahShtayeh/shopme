@@ -35,6 +35,7 @@
 						<li th:replace="fragments :: nav_link('/settings', 'Settings')" />
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" data-toggle="dropdown" 
+								th:href="@{/account}"
 								sec:authentication="principal.fullName"></a>
 							<div class="dropdown-menu">
 								<a id="logoutLink" class="dropdown-item" th:href="@{/logout}">Logout</a>

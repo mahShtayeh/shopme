@@ -116,4 +116,26 @@ public class UserService {
 		
 		return userRepo.findAll(pageConf); 
 	}
+	
+	public User updateAccount(User userInForm) {
+		User userInDB = userRepo.findById(userInForm.getId()).get(); 
+		
+		if(!userInForm.getPassword().isEmpty()) {
+			userInDB.setPassword(userInForm.getPassword()); 
+			encodePassword(userInDB); 
+		}
+		
+		if(!userInForm.getPhotos().isEmpty()) {
+			userInDB.setPhotos(userInForm.getPhotos()); 
+		}
+		
+		userInDB.setFirstName(userInForm.getFirstName()); 
+		userInDB.setLastName(userInForm.getLastName()); 
+		
+		return userRepo.save(userInDB); 
+	}
+
+	public User getUserByEmail(String userEmail) {
+		return userRepo.findByEmail(userEmail); 
+	}
 }
