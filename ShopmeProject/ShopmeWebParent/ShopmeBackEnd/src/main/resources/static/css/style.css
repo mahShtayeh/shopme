@@ -4,7 +4,6 @@
 *.icon-dark {color: gray;}
 *.icon-blue {color: blue;}
 *.icon-orange {color: orange;}
-*.icon-yellow {color: yellow;}
 
 @media screen and (max-width: 768px) {
 	/* Small Screen */
