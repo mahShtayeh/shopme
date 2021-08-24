@@ -22,17 +22,48 @@
 				<!--Nav bar-->
 				<div id="topNavbar" class="collapse navbar-collapse">
 					<ul class="navbar-nav">
-						<li th:replace="fragments :: nav_link('/users', 'Users')" />
-						<li th:replace="fragments :: nav_link('/categories', 'Categories')" />
-						<li th:replace="fragments :: nav_link('/brands', 'Brands')" />
-						<li th:replace="fragments :: nav_link('/products', 'Products')" />
-						<li th:replace="fragments :: nav_link('/customers', 'Customers')" />
-						<li th:replace="fragments :: nav_link('/shipping', 'Shipping')" />
-						<li th:replace="fragments :: nav_link('/orders', 'Orders')" />
-						<li th:replace="fragments :: nav_link('/report', 'Sales Report')" />
-						<li th:replace="fragments :: nav_link('/articles', 'Articles')" />
-						<li th:replace="fragments :: nav_link('/menus', 'Menus')" />
-						<li th:replace="fragments :: nav_link('/settings', 'Settings')" />
+						<th:block sec:authorize="hasAuthority('Admin')">
+							<li th:replace="fragments :: nav_link('/users', 'Users')" />
+						</th:block>
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+							<li th:replace="fragments :: nav_link('/categories', 'Categories')" />
+						</th:block>
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+							<li th:replace="fragments :: nav_link('/brands', 'Brands')" />
+						</th:block>
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Salesperson', 'Editor', 'Shipper')">
+							<li th:replace="fragments :: nav_link('/products', 'Products')" />
+						</th:block>
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Assistant')">
+							<li th:replace="fragments :: nav_link('/questions', 'Questions')" />
+						</th:block>
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Assistant')">
+							<li th:replace="fragments :: nav_link('/reviews', 'Reviews')" />
+						</th:block>
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Salesperson')">
+							<li th:replace="fragments :: nav_link('/customers', 'Customers')" />
+						</th:block>
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Salesperson')">
+							<li th:replace="fragments :: nav_link('/shipping', 'Shipping')" />
+						</th:block>
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Salesperson', 'Shipper')">
+							<li th:replace="fragments :: nav_link('/orders', 'Orders')" />
+						</th:block>
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Salesperson')">
+							<li th:replace="fragments :: nav_link('/report', 'Sales Report')" />
+						</th:block>
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+							<li th:replace="fragments :: nav_link('/articles', 'Articles')" />
+						</th:block>
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+							<li th:replace="fragments :: nav_link('/menus', 'Menus')" />
+						</th:block>
+						<th:block sec:authorize="hasAuthority('Admin')">
+							<li th:replace="fragments :: nav_link('/settings', 'Settings')" />
+						</th:block>
+						<li>
+							<span class="fas fa-user fa-2x icon-silver"></span>
+						</li>
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" data-toggle="dropdown" 
 								th:href="@{/account}"

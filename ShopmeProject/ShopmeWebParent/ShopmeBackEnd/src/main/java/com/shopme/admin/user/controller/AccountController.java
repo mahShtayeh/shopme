@@ -1,4 +1,4 @@
-package com.shopme.admin.user;
+package com.shopme.admin.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.shopme.admin.security.ShopmeUserDetails;
+import com.shopme.admin.user.UserService;
 import com.shopme.common.entity.User;
 
 @Controller
@@ -23,6 +24,6 @@ public class AccountController {
 		
 		model.addAttribute("user", userLatestUpdate); 
 		
-		return "account_form"; 
+		return "user/account_form"; 
 	}
 }

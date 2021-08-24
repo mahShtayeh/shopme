@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-	<head th:replace="fragments :: page_head(${pageTitle})"/>
+	<head th:replace="fragments :: page_head('Account Details')"/>
 	
 	<body>
 	
@@ -9,19 +9,23 @@
 		<div th:replace="navigation :: nav_bar"/>
 		
 		<div class="container-fluid">
-			<div>
-				<h2>Manage Users | [[${pageTitle}]]</h2>
-			</div>
-			
-			<form th:action="@{/users/save}" method="post" style="max-width: 850px; margin: 0 auto;"
+			<form th:action="@{/account/update}" method="post" style="max-width: 850px; margin: 0 auto;"
 				th:object="${user}" onsubmit="return checkEmailDuplicate(this);" enctype="multipart/form-data" >
+				<div class="text-center">
+					<h2>Your Account Details</h2>
+				</div>
+				
+				<!--Success alert message-->
+				<div th:if="${message != null}" class="alert alert-success text-center">
+					[[${message}]]
+				</div>
+				
 				<input type="hidden" th:field="*{id}" />
 				<div class="border border-secondary rounded p-3">
 					<div class="form-group row">
 						<label class="col-sm-4 col-form-label">E-mail: </label>
 						<div class="col-sm-8">
-							<input type="email" class="form-control" th:field="*{email}" 
-								minlength="8" maxlength="128" required />
+							<input type="email" class="form-control" th:field="*{email}" readonly="readonly" />
 						</div>
 					</div>
 					
@@ -44,32 +48,26 @@
 					<div class="form-group row">
 						<label class="col-sm-4 col-form-label">Password: </label>
 						<div class="col-sm-8">
-							<input th:if="${user.id == null}" type="password" class="form-control" 
-								th:field="*{password}" minlength="8" maxlength="20" required />
-								
-							<input th:if="${user.id != null}" type="password" class="form-control" 
-								th:field="*{password}" 
+							<input type="password" class="form-control" th:field="*{password}" 
 								placeholder="Leave blank if you don't want to change the password" 
-								minlength="8" maxlength="20" />
+								minlength="8" maxlength="20" 
+								oninput="checkPasswordMatch(document.getElementById('confirmPassword'))"/>
 						</div>
 					</div>
 					
 					<div class="form-group row">
-						<label class="col-sm-4 col-form-label">Roles: </label>
+						<label class="col-sm-4 col-form-label">Confirm Password: </label>
 						<div class="col-sm-8">
-							<th:block th:each="role : ${listRoles}">
-								<input type="checkbox" th:field="*{roles}" th:text="${role.name}"
-									th:value="${role.id}" class="m-2" />
-									 - <small>[[${role.description}]]</small>
-									 <br/>
-							</th:block>
+							<input id="confirmPassword" type="password" class="form-control" 
+								minlength="8" maxlength="20"
+								oninput="checkPasswordMatch(this)" />
 						</div>
 					</div>
 					
 					<div class="form-group row">
-						<label class="col-sm-4 col-form-label">Enabled: </label>
+						<label class="col-sm-4 col-form-label">Assigned Roles: </label>
 						<div class="col-sm-8">
-							<input type="checkbox" th:field="*{enabled}" />
+							<span><p>[[${user.roles}]]</p></span>
 						</div>
 					</div>
 					
@@ -114,63 +112,17 @@
 		<!--Footer-->
 		<div th:replace="fragments :: footer" />
 		
-		<script type="text/javascript">
-		$(document).ready(
-			function() {
-				$("#cancelBtn").on("click", function() {
-					window.location = "[[@{/users}]]"; 
-				}); 
-				
-				$("#profile").change(function() {
-					fileSize = this.files[0].size; 
-					
-					if(fileSize > 1048576) {
-						this.setCustomValidity("You must choose an image less than 1MB !"); 
-						this.reportValidity(); 
-					} else {
-						this.setCustomValidity(""); 
-						showImageThumbnail(this); 
-					}
-				}); 
+	<script type="text/javascript">
+		moduleURL = "[[@{/}]]"; 
+		
+		function checkPasswordMatch(confirmPassword) {
+			if(confirmPassword.value != $("#password").val()) {
+				confirmPassword.setCustomValidity("Passwords do not match !"); 
+			} else {
+				confirmPassword.setCustomValidity(""); 
 			}
-		); 
-		
-		function showImageThumbnail(fileInput) {
-			let file = fileInput.files[0]; 
-			
-			let reader = new FileReader(); 
-			reader.onload = function(e) {
-				$("#thumbnail").attr("src", e.target.result); 
-			}; 
-			reader.readAsDataURL(file); 
-		}
-		
-		function checkEmailDuplicate(form) {
-			url = "[[@{/users/check_email}]]";
-			userEmail = $("#email").val(); 
-			userId = $("#id").val(); 
-			csrfValue = $("input[name = '_csrf']").val(); 
-			params = {id: userId, email: userEmail, _csrf: csrfValue}; 
-			
-			$.post(url, params, function(response) {
-				if(response == "OK") {
-					form.submit(); 
-				} else if(response == "Dublicated") {
-					showModalDialog("Warning", "The Email [" + userEmail + "] is already used"); 
-				} else {
-					showModalDialog("Error", "Unknowen response from the server"); 
-				}
-			}).fail(function() {
-				showModalDialog("Error", "Couldn't connect to the server'");
-			}); 
-			return false; 
-		}
-		
-		function showModalDialog(title, message) {
-			$("#modalTitle").text(title); 
-			$("#modalBody").text(message); 
-			$("#modalDialog").modal(); 
 		}
 	</script>
+	<script th:src="@{/js/common_form.js}"></script>
 	</body>
 </html>

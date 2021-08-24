@@ -1,4 +1,4 @@
-package com.shopme.admin.user;
+package com.shopme.admin.user.controller;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,6 +21,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.security.ShopmeUserDetails;
+import com.shopme.admin.user.UserExporter;
+import com.shopme.admin.user.UserNotFoundException;
+import com.shopme.admin.user.UserService;
 import com.shopme.common.entity.Role;
 import com.shopme.common.entity.User;
 
@@ -44,7 +47,7 @@ public class UserController {
 		model.addAttribute("listRoles", listRoles); 
 		model.addAttribute("pageTitle", "Create New User"); 
 		
-		return "user_form"; 
+		return "user/user_form"; 
 	}
 	
 	@GetMapping("/users/page/{pageNum}")
@@ -77,7 +80,7 @@ public class UserController {
 		model.addAttribute("listUsers", listUsers); 
 		model.addAttribute("keyword", keyword); 
 		
-		return "users"; 
+		return "user/users"; 
 	}
 	
 	@PostMapping("/users/save")
@@ -125,7 +128,7 @@ public class UserController {
 			model.addAttribute("listRoles", listRoles); 
 			model.addAttribute("pageTitle", "Edit User(ID: " + id + ")"); 
 			
-			return "user_form"; 
+			return "user/user_form"; 
 		} catch (UserNotFoundException e) {
 			redirectAttributes.addFlashAttribute("message", e.getMessage()); 
 			
