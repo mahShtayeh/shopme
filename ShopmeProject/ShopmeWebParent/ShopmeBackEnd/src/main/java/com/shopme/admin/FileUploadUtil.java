@@ -5,11 +5,14 @@ import java.nio.file.StandardCopyOption;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Path; 
+import java.nio.file.Path;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 public class FileUploadUtil {
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileUploadUtil.class); 
 	public static void saveFile(String uploadDir, String fileName, 
 			MultipartFile multipartFile) throws IOException {
 		Path uploadPath = Paths.get(uploadDir); 
@@ -35,12 +38,12 @@ public class FileUploadUtil {
 					try {
 						Files.delete(file); 
 					} catch (IOException ex) {
-						System.out.println("Couldn't delete the file: " + file); 
+						LOGGER.error("Couldn't delete the file: " + file);  
 					}
 				}
 			});
 		} catch (IOException ex) { 
-			System.out.println("Couldn't lest directory: " + dirPath); 
+			LOGGER.error("Couldn't lest directory: " + dirPath);
 		}
 	}
 }
