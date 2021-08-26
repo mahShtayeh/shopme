@@ -37,17 +37,33 @@ public class Category {
 	
 	@OneToMany(mappedBy = "parent")
 	private Set<Category> children = new HashSet<>();
-
+	
 	public Category() {
 	}
+	
+	public Category(Integer id) {
+		this.id = id; 
+	}
 
-	public Category(String name, String alias, String image, boolean enabled) {
+	public Category(String name, String alias, String image) {
+		this(name, alias, image, false); 
+	}
+	
+	public Category(String name, String alias, String image, Category parent) {
 		this.name = name;
 		this.alias = alias;
 		this.image = image;
-		this.enabled = enabled;
+		this.parent = parent;
 	}
 
+	public Category(String name, String alias, String image, boolean enabled) {
+		this(name, alias, image, enabled, null); 
+	}
+	
+	public Category(String name, String alias, String image, boolean enabled, Category parent) {
+		this(name, alias, image, enabled, parent, null); 
+	}
+	
 	public Category(String name, String alias, String image, boolean enabled, Category parent, Set<Category> children) {
 		this.name = name;
 		this.alias = alias;
