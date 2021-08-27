@@ -4,7 +4,7 @@ $(document).ready(
 			window.location = moduleURL;
 		});
 
-		$("#profile").change(function() {
+		$("#fileImage").change(function() {
 			fileSize = this.files[0].size;
 
 			if (fileSize > 1048576) {

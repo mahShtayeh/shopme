@@ -45,8 +45,10 @@ public class CategoryController {
 	@GetMapping("/category/new") 
 	public String newCategory(Model model) {
 		Category category = new Category();
+		List<Category> categoriesList = service.listHierarchicalCategories(); 
 		
 		model.addAttribute("category", category); 
+		model.addAttribute("categoriesList", categoriesList); 
 		model.addAttribute("pageTitle", "Create New User"); 
 		
 		return "category/category_form"; 

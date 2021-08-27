@@ -77,7 +77,7 @@
 						<label class="col-sm-4 col-form-label">Photo: </label>
 						<div class="col-sm-8">
 							<input type="hidden" th:field="*{photos}" />
-							<input id="profile" name="image" type="file" accept="image/jpeg, image/png"
+							<input id="fileImage" name="image" type="file" accept="image/jpeg, image/png"
 								class="mb-2" />
 							<img id="thumbnail" th:src="@{${user.photosImagePath}}" alt="photo thumbnail"
 								class="img-fluid" />

@@ -1,5 +1,6 @@
 package com.shopme.admin.category;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -28,6 +29,40 @@ public class CategoryService {
 	
 	public List<Category> listCategoires() {
 		return (List<Category>) categoryRepo.findAll(Sort.by("name").ascending()); 
+	}
+	
+	public List<Category> listHierarchicalCategories() {
+		List<Category> listHierarchey = new ArrayList<>(); 
+		
+		Iterable<Category> categories =  categoryRepo.findAll(); 
+		
+		for (Category category : categories) {
+			if(category.getParent() == null) {
+				listHierarchey.add(category);
+				
+				for (Category child : category.getChildren()) {
+					child.setName("--" + child.getName()); 
+					listHierarchey.add(child); 
+					
+					ListChildren(child, 2, listHierarchey); 
+				}
+			}
+		}
+		
+		return listHierarchey; 
+	}
+	
+	private void ListChildren(Category parent, int level, List<Category> listHierarchey) {
+		for (Category child : parent.getChildren()) {
+			StringBuilder hyphens = new StringBuilder(); 
+			for(int i = 0; i < level; i++) 
+				hyphens.append("--"); 
+			
+			child.setName(hyphens + child.getName()); 
+			listHierarchey.add(child); 
+			
+			ListChildren(child, ++level, listHierarchey); 
+		}
 	}
 	
 	public Category saveCategory(Category category) {
