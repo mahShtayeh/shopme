@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments :: page_head('Users - Shopme Admin')"/>
+<head th:replace="fragments :: page_head('Categories - Shopme Admin')"/>
 
 <body>
 
@@ -10,13 +10,13 @@
 	
 	<div class="container-fluid">
 		<div>
-			<h2>Manage Users</h2>
+			<h2>Manage Categories</h2>
 			
 			<!--User Actions-->
-			<a th:href="@{/users/new}" class="fas fa-user-plus fa-2x icon-blue mr-2"></a>
-			<a th:href="@{/users/export/csv}" class="fas fa-file-csv fa-2x icon-green mr-2"></a>
-			<a th:href="@{/users/export/excel}" class="fas fa-file-excel fa-2x icon-red mr-2"></a>
-			<a th:href="@{/users/export/pdf}" class="fas fa-file-pdf fa-2x icon-orange mr-2"></a>
+			<a th:href="@{/category/new}" class="fas fa-user-plus fa-2x icon-blue mr-2"></a>
+			<a th:href="@{/category/export/csv}" class="fas fa-file-csv fa-2x icon-green mr-2"></a>
+			<a th:href="@{/category/export/excel}" class="fas fa-file-excel fa-2x icon-red mr-2"></a>
+			<a th:href="@{/category/export/pdf}" class="fas fa-file-pdf fa-2x icon-orange mr-2"></a>
 		</div>
 		
 		<!--Success alert message-->
@@ -26,7 +26,7 @@
 		
 		<!--Search form-->
 		<div>
-			<form th:action="@{/users/page/1}" class="form-inline m-3">
+			<form th:action="@{/category/page/1}" class="form-inline m-3">
 				<input type="hidden" name="sortField" th:value="${sortField}" />
 				<input type="hidden" name="sortDir" th:value="${sortDir}" />
 
@@ -48,29 +48,25 @@
 			<table class="table table-bordered table-striped table-hover table-responsive-xl">
 				<thead class="thead-dark">
 					<tr>
+						<th th:replace="fragments :: column_link('id', 'ID', 'category', 'none')" />
+						<th>Image</th>
+						<th th:replace="fragments :: column_link('name', 'Name', 'category', 'none')" />
 						<th class="hideable-column">
-							<th th:replace="fragments :: column_link('id', 'User ID', 'users', 'tag')" />
+							<th th:replace="fragments :: column_link('alias', 'Alias', 'category', 'tag')" />
 						</th>
-						<th>Photos</th>
-						<th class="hideable-column">
-							<th th:replace="fragments :: column_link('email', 'E-mail', 'users', 'tag')" />
-						</th>
-						<th th:replace="fragments :: column_link('firstName', 'First Name', 'users', 'none')" />
-						<th th:replace="fragments :: column_link('lastName', 'Last Name', 'users', 'none')" />
-						<th>Roles</th>
-						<th th:replace="fragments :: column_link('enabled', 'Enabled', 'users', 'none')" />
+						<th th:replace="fragments :: column_link('enabled', 'Enabled', 'category', 'none')" />
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:replace="fragments :: full_detail_tr_link()" />
+					<tr th:replace="category/category_fragments :: full_detail_tr_link()" />
 				</tbody>
 			</table>
 		</div>
 		
 		<!--User data table - mobile responsive-->
 		<div class="less-details">
-			<div th:replace="fragments :: less_detail_div_link()" />
+			<div th:replace="category/category_fragments :: less_detail_div_link()" />
 		</div>
 	</div>
 	
@@ -81,26 +77,26 @@
 	
 	<!--No user found annotation-->
 	<div class="text-center m-1" th:unless="${totalItems > 0}">
-		<span>No Users Found</span>
+		<span>No Categories Found</span>
 	</div>
 	
 	<!--Pages nav bar-->
 	<nav th:if="${totalPages > 1}">
 		<ul class="pagination justify-content-center flex-wrap">
 			<li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-				<a th:replace="fragments :: page_link(users, 1, First)" />
+				<a th:replace="fragments :: page_link(category, 1, First)" />
 			</li>
 			<li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-				<a th:replace="fragments :: page_link(users, ${currentPage - 1}, Previous)" />
+				<a th:replace="fragments :: page_link(category, ${currentPage - 1}, Previous)" />
 			</li>
 			<li th:class="${currentPage != i ? 'page-item' : 'page-item active'}" th:each="i : ${#numbers.sequence(1, totalPages)}">
-		    	<a th:replace="fragments :: page_link(users, ${i}, ${i})" />
+		    	<a th:replace="fragments :: page_link(category, ${i}, ${i})" />
 		    </li>
 		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-		    	<a th:replace="fragments :: page_link(users, ${currentPage + 1}, Next)" />
+		    	<a th:replace="fragments :: page_link(category, ${currentPage + 1}, Next)" />
 		    </li>
 		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-		    	<a th:replace="fragments :: page_link(users, ${totalPages}, Last)" />
+		    	<a th:replace="fragments :: page_link(category, ${totalPages}, Last)" />
 		    </li>
 		  </ul>
 		</nav>
@@ -135,17 +131,17 @@
 				e.preventDefault();
 
 				link = $(this);
-				userId = link.attr("userId");
+				categoryId = link.attr("categoryId");
 
 				$("#yesBtn").attr("href", link.attr("href"));
-				$("#modalBody").text("Are you sure you want to delete the user with ID [" + userId + "] ?");
+				$("#modalBody").text("Are you sure you want to delete the Category with ID [" + categoryId + "] ?");
 				$("#confirmationDialog").modal();
 			});
 		});
 
 		function clearFilter() {
-			//let url = "[[@{'/users/page/1?sortField=' + ${sortField} + 'sortDir=' + ${sortDir}}]]";
-			let url = "[[@{/users}]]";
+			//let url = "[[@{'/category/page/1?sortField=' + ${sortField} + 'sortDir=' + ${sortDir}}]]";
+			let url = "[[@{/category}]]";
 			window.location.replace(url);
 		}
 	</script>

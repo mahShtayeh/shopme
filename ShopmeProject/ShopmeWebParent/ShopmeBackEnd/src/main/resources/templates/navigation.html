@@ -26,7 +26,7 @@
 							<li th:replace="fragments :: nav_link('/users', 'Users')" />
 						</th:block>
 						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
-							<li th:replace="fragments :: nav_link('/categories', 'Categories')" />
+							<li th:replace="fragments :: nav_link('/category', 'Categories')" />
 						</th:block>
 						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
 							<li th:replace="fragments :: nav_link('/brands', 'Brands')" />

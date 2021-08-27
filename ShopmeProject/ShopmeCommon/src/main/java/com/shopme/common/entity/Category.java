@@ -132,4 +132,9 @@ public class Category {
 	public void addChild(Category child) {
 		children.add(child); 
 	}
+
+	@Override
+	public String toString() {
+		return "Category [name=" + name + ", alias=" + alias + "]";
+	}
 }

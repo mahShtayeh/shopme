@@ -16,17 +16,17 @@
 	</head>
 	
 	<body>
-		<th th:fragment="column_link(fieldName, columnLabel, removeTag)" th:remove=${removeTag}>
+		<th th:fragment="column_link(fieldName, columnLabel, baseUrl, removeTag)" th:remove=${removeTag}>
 			<a class="text-white"
-				th:href="@{'/users/page/' + ${currentPage} + '?sortField=' + ${fieldName} + '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+				th:href="@{'/' + ${baseUrl} + '/page/' + ${currentPage} + '?sortField=' + ${fieldName} + '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
 				[[${columnLabel}]]
 			</a>
 			<span th:if="${sortField == fieldName}"
 				th:class="${sortDir == 'desc' ? 'fas fa-sort-down' : 'fas fa-sort-up'}"></span>
 		</th>
 		
-		<a th:fragment="page_link(pageNum, pageLabel)" class="page-link"
-			th:href="@{'/users/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+		<a th:fragment="page_link(baseUrl, pageNum, pageLabel)" class="page-link"
+			th:href="@{'/' + ${baseUrl} + '/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
 			[[${pageLabel}]]
 		</a>
 		
