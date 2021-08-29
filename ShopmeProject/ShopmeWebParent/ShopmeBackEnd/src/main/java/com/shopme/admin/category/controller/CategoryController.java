@@ -44,12 +44,11 @@ public class CategoryController {
 	
 	@GetMapping("/category/new") 
 	public String newCategory(Model model) {
-		Category category = new Category();
 		List<Category> categoriesList = service.listHierarchicalCategories(); 
 		
-		model.addAttribute("category", category); 
+		model.addAttribute("category", new Category()); 
 		model.addAttribute("categoriesList", categoriesList); 
-		model.addAttribute("pageTitle", "Create New User"); 
+		model.addAttribute("pageTitle", "Create New Category"); 
 		
 		return "category/category_form"; 
 	}
@@ -91,7 +90,7 @@ public class CategoryController {
 	@PostMapping("/category/save")
 	public String saveCategory(Category category, 
 			RedirectAttributes redirectAttributes, 
-			@RequestParam("image") MultipartFile multipartFile) throws IOException {
+			@RequestParam("fileImage") MultipartFile multipartFile) throws IOException {
 		
 		if(!multipartFile.isEmpty()) {
 			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename()); 
@@ -99,15 +98,15 @@ public class CategoryController {
 			category.setImage(fileName); 
 			Category savedCategory = service.saveCategory(category); 
 			
-			String uploadDir = "category-images/" + savedCategory.getId(); 
+			String uploadDir = "../category-images/" + savedCategory.getId(); 
 			
 			FileUploadUtil.cleanDir(uploadDir); 
-			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile); 
 		} else {
-			if(category.getImage().isEmpty()) 
-				category.setImage(null); 
+			if(category.getImage().isEmpty())
+				category.setImage(null);  
 			
-			service.saveCategory(category);  
+			service.saveCategory(category); 
 		}
 		
 		redirectAttributes.addFlashAttribute("message", 
@@ -165,19 +164,19 @@ public class CategoryController {
 	
 	@GetMapping("/category/export/csv")
 	public void exportToCSV(HttpServletResponse response) throws IOException {
-		List<Category> categoriesList = service.listCategoires(); 
+		List<Category> categoriesList = service.listCategories(); 
 		CategoryExporter.exportToCSV(categoriesList, response); 
 	}
 	
 	@GetMapping("/category/export/excel")
 	public void exportToExcel(HttpServletResponse response) throws IOException {
-		List<Category> categoriesList = service.listCategoires(); 
+		List<Category> categoriesList = service.listCategories(); 
 		CategoryExporter.exportToExcel(categoriesList, response); 
 	}
 	
 	@GetMapping("/category/export/pdf")
 	public void exportToPDF(HttpServletResponse response) throws IOException {
-		List<Category> categoriesList = service.listCategoires(); 
+		List<Category> categoriesList = service.listCategories(); 
 		CategoryExporter.exportToPDF(categoriesList, response); 
 	}
 }

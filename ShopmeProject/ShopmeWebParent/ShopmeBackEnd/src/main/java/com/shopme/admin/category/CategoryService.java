@@ -27,8 +27,37 @@ public class CategoryService {
 	@Autowired
 	private CategoryRepository categoryRepo; 
 	
-	public List<Category> listCategoires() {
+	public List<Category> listCategories() {
 		return (List<Category>) categoryRepo.findAll(Sort.by("name").ascending()); 
+	}
+	
+	public List<Category> listHierarchicalCategoriesByPage(String keyword, Pageable page) {
+		Page<Category> currentPage; 
+		List<Category> listHierarchey = new ArrayList<>(); 
+		
+		if(keyword != null) 
+			currentPage = categoryRepo.findAll(keyword, page); 
+		else 
+			currentPage = categoryRepo.findAll(page); 
+		
+		Iterable<Category> categories =  currentPage.getContent(); 
+		
+		for (Category category : categories) {
+			if(category.getParent() == null) {
+				listHierarchey.add(new Category(category.getId(), category.getName()));
+				
+				for (Category child : category.getChildren()) {
+					Category childClone = new Category(child.getId()); 
+					
+					childClone.setName("--" + child.getName()); 
+					listHierarchey.add(childClone); 
+					
+					ListChildren(child, 2, listHierarchey); 
+				}
+			}
+		}
+		
+		return listHierarchey;
 	}
 	
 	public List<Category> listHierarchicalCategories() {
@@ -38,11 +67,13 @@ public class CategoryService {
 		
 		for (Category category : categories) {
 			if(category.getParent() == null) {
-				listHierarchey.add(category);
+				listHierarchey.add(new Category(category.getId(), category.getName()));
 				
 				for (Category child : category.getChildren()) {
-					child.setName("--" + child.getName()); 
-					listHierarchey.add(child); 
+					Category childClone = new Category(child.getId()); 
+					
+					childClone.setName("--" + child.getName()); 
+					listHierarchey.add(childClone); 
 					
 					ListChildren(child, 2, listHierarchey); 
 				}
@@ -55,11 +86,14 @@ public class CategoryService {
 	private void ListChildren(Category parent, int level, List<Category> listHierarchey) {
 		for (Category child : parent.getChildren()) {
 			StringBuilder hyphens = new StringBuilder(); 
+			
 			for(int i = 0; i < level; i++) 
 				hyphens.append("--"); 
 			
-			child.setName(hyphens + child.getName()); 
-			listHierarchey.add(child); 
+			Category childClone = new Category(child.getId()); 
+			
+			childClone.setName(hyphens + child.getName()); 
+			listHierarchey.add(childClone); 
 			
 			ListChildren(child, ++level, listHierarchey); 
 		}

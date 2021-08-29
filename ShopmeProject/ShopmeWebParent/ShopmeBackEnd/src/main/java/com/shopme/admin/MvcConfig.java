@@ -12,6 +12,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		//User's profile photos resource handler
 		String dirName = "user-photos"; 
 		Path userPhotosDir = Paths.get(dirName); 
 		
@@ -19,6 +20,15 @@ public class MvcConfig implements WebMvcConfigurer {
 		
 		registry.addResourceHandler("/" + dirName + "/**")
 			.addResourceLocations("file:" + userPhotosPath + "/"); 
+		
+		//Categories' profile photos resource handler
+		String categoryImagesDirName = "../category-images"; 
+		Path categoryImagesDir = Paths.get(categoryImagesDirName); 
+		
+		String categoryImagesPath = categoryImagesDir.toFile().getAbsolutePath(); 
+		
+		registry.addResourceHandler("/category-images/**")
+			.addResourceLocations("file:" + categoryImagesPath + "/"); 
 	}
 	
 }

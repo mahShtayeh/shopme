@@ -24,6 +24,7 @@ function showImageThumbnail(fileInput) {
 	let reader = new FileReader();
 	reader.onload = function(e) {
 		$("#thumbnail").attr("src", e.target.result);
-	};
+	}; 
+	
 	reader.readAsDataURL(file);
 }

@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "categories")
@@ -44,6 +45,11 @@ public class Category {
 	public Category(Integer id) {
 		this.id = id; 
 	}
+	
+	public Category(Integer id, String name) {
+		this.id = id; 
+		this.name = name; 
+	}
 
 	public Category(String name, String alias, String image) {
 		this(name, alias, image, false); 
@@ -57,14 +63,22 @@ public class Category {
 	}
 
 	public Category(String name, String alias, String image, boolean enabled) {
-		this(name, alias, image, enabled, null); 
+		this.name = name; 
+		this.alias = alias; 
+		this.image = image; 
+		this.enabled = enabled; 
 	}
 	
-	public Category(String name, String alias, String image, boolean enabled, Category parent) {
-		this(name, alias, image, enabled, parent, null); 
+	public Category(String name, String alias, String image, Category parent, boolean enabled) {
+		this.name = name;
+		this.alias = alias;
+		this.image = image;
+		this.parent = parent;
+		this.enabled = enabled;
 	}
 	
-	public Category(String name, String alias, String image, boolean enabled, Category parent, Set<Category> children) {
+	public Category(String name, String alias, String image, boolean enabled, Category parent, 
+			Set<Category> children) {
 		this.name = name;
 		this.alias = alias;
 		this.image = image;
@@ -136,5 +150,10 @@ public class Category {
 	@Override
 	public String toString() {
 		return "Category [name=" + name + ", alias=" + alias + "]";
+	}
+	
+	@Transient
+	public String getImagePath() {
+		return "/category-images/" + this.getId() + "/" + this.image; 
 	}
 }

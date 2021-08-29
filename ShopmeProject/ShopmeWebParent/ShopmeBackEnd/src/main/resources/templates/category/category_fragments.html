@@ -3,7 +3,9 @@
 	<body>
 		<tr th:fragment="full_detail_tr_link()" th:each="category : ${categoriesList}">
 			<td>[[${category.id}]]</td>
-			<td></td>
+			<td>
+				<img th:src="@{${category.imagePath}}" class="img-fluid" style="width: 96px; height: 96px;" />
+			</td>
 			<td>[[${category.name}]]</td>
 			<td class="hideable-column">[[${category.alias}]]</td>
 			<td>
