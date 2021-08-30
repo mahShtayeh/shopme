@@ -70,9 +70,9 @@ public class CategoryService {
 				listHierarchey.add(new Category(category.getId(), category.getName()));
 				
 				for (Category child : category.getChildren()) {
-					Category childClone = new Category(child.getId()); 
+					Category childClone = new Category(child.getId(), 
+							"--" + child.getName()); 
 					
-					childClone.setName("--" + child.getName()); 
 					listHierarchey.add(childClone); 
 					
 					ListChildren(child, 2, listHierarchey); 
@@ -90,12 +90,12 @@ public class CategoryService {
 			for(int i = 0; i < level; i++) 
 				hyphens.append("--"); 
 			
-			Category childClone = new Category(child.getId()); 
+			Category childClone = new Category(child.getId(), 
+					hyphens + child.getName()); 
 			
-			childClone.setName(hyphens + child.getName()); 
 			listHierarchey.add(childClone); 
 			
-			ListChildren(child, ++level, listHierarchey); 
+			ListChildren(child, level + 1, listHierarchey); 
 		}
 	}
 	

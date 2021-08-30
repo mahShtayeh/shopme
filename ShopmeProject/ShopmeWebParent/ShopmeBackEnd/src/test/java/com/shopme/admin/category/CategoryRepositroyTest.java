@@ -81,4 +81,24 @@ public class CategoryRepositroyTest {
 			printChildern(child, ++level); 
 		}
 	}
+	
+	@Test 
+	public void getCategoryByNameTest() {
+		String name = "Computers"; 
+		
+		Category category = repo.findByName(name); 
+		
+		assertThat(category).isNotNull(); 
+		assertThat(category.getName().equals(name)); 
+	}
+	
+	@Test 
+	public void getCategoryByAliasTest() {
+		String alias = "electronics"; 
+		
+		Category category = repo.findByAlias(alias); 
+		
+		assertThat(category).isNotNull(); 
+		assertThat(category.getName().equals(alias)); 
+	}
 }

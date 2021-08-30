@@ -106,7 +106,7 @@ public class UserController {
 		}
 		
 		redirectAttributes.addFlashAttribute("message", 
-				"The user [" + user.getFirstName() + "] has been added successfully"); 
+				"The user [" + user.getFirstName() + "] has been saved successfully"); 
 		
 		return getRedirectUrlToAffectedUser(user); 
 	}

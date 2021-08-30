@@ -51,8 +51,8 @@
 						<div class="col-sm-8">
 							<input type="hidden" th:field="*{image}" />
 							<input id="fileImage" name="fileImage" type="file" accept="image/jpeg, image/png"
-								class="mb-2" required/>
-							<img id="thumbnail" alt="Image thumbnail" th:src="@{/images/default_category.png}" 
+								class="mb-2" th:required="${category.id == null}" />
+							<img id="thumbnail" alt="Image thumbnail" th:src="@{${category.imagePath}}" 
 								class="img-fluid" />
 						</div>
 					</div>

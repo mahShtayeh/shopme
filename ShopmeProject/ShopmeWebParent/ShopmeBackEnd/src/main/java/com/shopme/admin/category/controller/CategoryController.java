@@ -110,7 +110,7 @@ public class CategoryController {
 		}
 		
 		redirectAttributes.addFlashAttribute("message", 
-				"The category [" + category.getName() + "] has been created successfully"); 
+				"The category [" + category.getName() + "] has been saved successfully"); 
 		
 		return getRedirectUrlToAffectedCategory(category); 
 	}
@@ -126,8 +126,10 @@ public class CategoryController {
 			Model model) {
 		try {
 			Category category = service.getCategory(id);
+			List<Category> categoriesList = service.listHierarchicalCategories(); 
 			
 			model.addAttribute("category", category); 
+			model.addAttribute("categoriesList", categoriesList);
 			model.addAttribute("pageTitle", "Edit Category(ID: " + id + ")"); 
 			
 			return "category/category_form"; 
