@@ -92,24 +92,8 @@
 			</form>
 		</div>
 		
-		<div class="modal fade text-center" id="modalDialog">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 class="modal-title" id="modalTitle">Warning</h4>
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-					</div>
-					
-					<div class="modal-body">
-						<span id="modalBody"></span>
-					</div>
-					
-					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-					</div>
-				</div>
-			</div>
-		</div>
+		<!--Modal Warning Dialog-->
+		<div th:replace="modal_fragments :: modal_dialog" />
 		
 		<!--Footer-->
 		<div th:replace="fragments :: footer" />
@@ -128,20 +112,14 @@
 				if(response == "OK") {
 					form.submit(); 
 				} else if(response == "Dublicated") {
-					showModalDialog("Warning", "The Email [" + userEmail + "] is already used"); 
+					showWarningModalDialog("The Email [" + userEmail + "] is already used"); 
 				} else {
-					showModalDialog("Error", "Unknowen response from the server"); 
+					showErrorModalDialog("Unknowen response from the server"); 
 				}
 			}).fail(function() {
-				showModalDialog("Error", "Couldn't connect to the server'");
+				showErrorModalDialog("Couldn't connect to the server'");
 			}); 
 			return false; 
-		}
-		
-		function showModalDialog(title, message) {
-			$("#modalTitle").text(title); 
-			$("#modalBody").text(message); 
-			$("#modalDialog").modal(); 
 		}
 	</script>
 	<script th:src="@{/js/common_form.js}"></script>

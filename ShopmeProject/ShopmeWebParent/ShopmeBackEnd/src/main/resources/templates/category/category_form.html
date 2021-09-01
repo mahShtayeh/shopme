@@ -13,7 +13,7 @@
 			</div>
 			
 			<form th:action="@{/category/save}" method="post" style="max-width: 850px; margin: 0 auto;"
-				th:object="${category}" enctype="multipart/form-data" >
+				th:object="${category}" enctype="multipart/form-data" onsubmit="return checkUnique(this)" >
 				
 				<input type="hidden" th:field="*{id}" />
 				
@@ -72,30 +72,42 @@
 			</form>
 		</div>
 		
-		<div class="modal fade text-center" id="modalDialog">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 class="modal-title" id="modalTitle">Warning</h4>
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-					</div>
-					
-					<div class="modal-body">
-						<span id="modalBody"></span>
-					</div>
-					
-					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-					</div>
-				</div>
-			</div>
-		</div>
+		<!--Modal Warning Dialog-->
+		<div th:replace="modal_fragments :: modal_dialog" />
 		
 		<!--Footer-->
 		<div th:replace="fragments :: footer" />
 		
 	<script type="text/javascript">
 		moduleURL = "[[@{/category}]]"; 
+		
+		function checkUnique(form) {
+			cateID = $("#id").val(); 
+			cateName = $("#name").val(); 
+			cateAlias = $("#alias").val(); 
+			
+			csrfValue = $("input[name='_csrf']").val(); 
+			
+			url = "[[@{/category/check_unique}]]"; 
+			
+			params = {id: cateID, name: cateName, alias: cateAlias, _csrf: csrfValue}; 
+			
+			$.post(url, params, function(response) {
+				if(response == "OK") {
+					form.submit(); 
+				} else if(response == "DublicatedName") {
+					showWarningModalDialog("The Name [" + cateName + "] is already used"); 
+				} else if(response == "DublicatedAlias") {
+					showWarningModalDialog("The Alias [" + cateAlias + "] is already used"); 
+				} else {
+					showErrorModalDialog("Unknowen response from the server"); 
+				}
+			}).fail(function() {
+				showErrorModalDialog("Couldn't connect to the server'");
+			}); 
+			
+			return false; 
+		} 
 	</script>
 	
 	<script th:src="@{/js/common_form.js}"></script>

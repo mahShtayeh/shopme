@@ -50,6 +50,12 @@ public class Category {
 		this.id = id; 
 		this.name = name; 
 	}
+	
+	public Category(Integer id, String name, String alias) {
+		this.id = id; 
+		this.name = name; 
+		this.alias = alias; 
+	}
 
 	public Category(String name, String alias, String image) {
 		this(name, alias, image, false); 

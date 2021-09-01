@@ -24,7 +24,21 @@ function showImageThumbnail(fileInput) {
 	let reader = new FileReader();
 	reader.onload = function(e) {
 		$("#thumbnail").attr("src", e.target.result);
-	}; 
-	
+	};
+
 	reader.readAsDataURL(file);
+}
+
+function showModalDialog(title, message) {
+	$("#modalTitle").text(title);
+	$("#modalBody").text(message);
+	$("#modalDialog").modal();
+}
+
+function showWarningModalDialog(message) {
+	showModalDialog("Warning", message); 
+}
+
+function showErrorModalDialog(message) {
+	showModalDialog("Error", message); 
 }
