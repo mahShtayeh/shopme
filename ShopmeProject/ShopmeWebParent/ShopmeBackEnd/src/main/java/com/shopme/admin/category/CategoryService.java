@@ -3,20 +3,18 @@ package com.shopme.admin.category;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.transaction.Transactional;
 
+import org.aspectj.weaver.bcel.UnwovenClassFile.ChildClass;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.shopme.common.entity.Category;
-import com.shopme.common.entity.Role;
-import com.shopme.common.entity.User;
 
 @Service
 @Transactional
@@ -27,73 +25,60 @@ public class CategoryService {
 	@Autowired
 	private CategoryRepository categoryRepo;
 
-	public List<Category> listCategories() {
-		return (List<Category>) categoryRepo.findAll(Sort.by("name").ascending());
+	public List<Category> listCategories(String keyword, String sortField, String sortDir) {
+		Sort sort = Sort.by(sortField); 
+		sort = (sortDir.equals("desc") ? sort.descending() : sort.ascending()); 
+		
+		if(keyword == null) 
+			return (List<Category>) categoryRepo.findAll(sort);
+		
+		return categoryRepo.findAll(keyword); 
 	}
 
-	public List<Category> listHierarchicalCategoriesByPage(String keyword, Pageable page) {
-		Page<Category> currentPage;
-		List<Category> listHierarchey = new ArrayList<>();
-
-		if (keyword != null)
-			currentPage = categoryRepo.findAll(keyword, page);
-		else
-			currentPage = categoryRepo.findAll(page);
-
-		Iterable<Category> categories = currentPage.getContent();
+	public List<Category> listHierarchicalCategories(String keyword, String sortField, String sortDir) throws CloneNotSupportedException {
+		List<Category> listHierarchey = new ArrayList<>(); 
+		
+		Iterable<Category> categories = this.listCategories(keyword, sortField, sortDir);
 
 		for (Category category : categories) {
 			if (category.getParent() == null) {
-				listHierarchey.add(new Category(category.getId(), category.getName()));
+				listHierarchey.add(category.clone()); 
 
-				for (Category child : category.getChildren()) {
-					Category childClone = new Category(child.getId());
+				SortedSet<Category> sortedChildren = this.sortChildren(category.getChildren(), "asc");
 
-					childClone.setName("--" + child.getName());
+				for (Category child : sortedChildren) {
+					Category childClone = child.clone(); 
+					childClone.setName("--" + childClone.getName()); 
+					
 					listHierarchey.add(childClone);
-
-					ListChildren(child, 2, listHierarchey);
+					
+					ListChildren(child, 2, listHierarchey, "asc");
 				}
 			}
 		}
 
 		return listHierarchey;
 	}
-
-	public List<Category> listHierarchicalCategories() {
-		List<Category> listHierarchey = new ArrayList<>();
-
-		Iterable<Category> categories = categoryRepo.findAll();
-
-		for (Category category : categories) {
-			if (category.getParent() == null) {
-				listHierarchey.add(new Category(category.getId(), category.getName()));
-
-				for (Category child : category.getChildren()) {
-					Category childClone = new Category(child.getId(), "--" + child.getName());
-
-					listHierarchey.add(childClone);
-
-					ListChildren(child, 2, listHierarchey);
-				}
-			}
-		}
-
-		return listHierarchey;
+	
+	public List<Category> getDropDownlistCategories() throws CloneNotSupportedException {
+		return listHierarchicalCategories(null, "name", "asc"); 
 	}
 
-	private void ListChildren(Category parent, int level, List<Category> listHierarchey) {
-		for (Category child : parent.getChildren()) {
+	private void ListChildren(Category parent, int level, List<Category> listHierarchey, String sortDir) throws CloneNotSupportedException {
+		SortedSet<Category> sortedChildren = this.sortChildren(parent.getChildren(), sortDir);
+
+		for (Category child : sortedChildren) {
 			StringBuilder hyphens = new StringBuilder();
 
 			for (int i = 0; i < level; i++)
 				hyphens.append("--");
 
-			Category childClone = new Category(child.getId(), hyphens + child.getName());
+			Category childClone = child.clone(); 
+			childClone.setName(hyphens + child.getName());
 
 			listHierarchey.add(childClone);
 
-			ListChildren(child, level + 1, listHierarchey);
+			ListChildren(child, level + 1, listHierarchey, sortDir);
 		}
 	}
 
@@ -108,23 +93,22 @@ public class CategoryService {
 
 		if (categoryByName == null) {
 			Category categoryByAlias = categoryRepo.findByAlias(alias);
-			if (categoryByAlias != null) 
-				if (isEditMod) 
-					if (categoryByAlias.getId() != id) 
-						return "DublicatedAlias"; 
-					else 
-						return "DublicatedAlias"; 
-		} else 
-			if (isEditMod) 
-				if (categoryByName.getId() == id) {
-					Category categoryByAlias = categoryRepo.findByAlias(alias);
-					if (categoryByAlias != null) 
-						if (categoryByAlias.getId() != id) 
-							return "DublicatedAlias"; 
-				} else 
-					return "DublicatedName"; 
-			else 
-				return "DublicatedName"; 
+			if (categoryByAlias != null)
+				if (isEditMod)
+					if (categoryByAlias.getId() != id)
+						return "DublicatedAlias";
+					else
+						return "DublicatedAlias";
+		} else if (isEditMod)
+			if (categoryByName.getId() == id) {
+				Category categoryByAlias = categoryRepo.findByAlias(alias);
+				if (categoryByAlias != null)
+					if (categoryByAlias.getId() != id)
+						return "DublicatedAlias";
+			} else
+				return "DublicatedName";
+		else
+			return "DublicatedName";
 
 		return "OK";
 	}
@@ -152,20 +136,7 @@ public class CategoryService {
 	public void updateCategoryEnabledStatus(Integer id, boolean enabled) {
 		categoryRepo.updateEnabledById(id, enabled);
 	}
-
-	public Page<Category> getCategoriesByPage(int pageNum, String sortField, String sortDir, String keyword) {
-		Sort sort = Sort.by(sortField);
-
-		sort = sortDir.equals("desc") ? sort.descending() : sort.ascending();
-
-		Pageable pageConf = PageRequest.of(pageNum, Category_PER_PAGE, sort);
-
-		if (keyword != null)
-			return categoryRepo.findAll(keyword, pageConf);
-
-		return categoryRepo.findAll(pageConf);
-	}
-
+	
 	public Category updateCategory(Category categoryInForm) {
 		Category categoryInDB = categoryRepo.findById(categoryInForm.getId()).get();
 
@@ -177,5 +148,18 @@ public class CategoryService {
 		categoryInDB.setAlias(categoryInForm.getAlias());
 
 		return categoryRepo.save(categoryInDB);
+	}
+
+	private SortedSet<Category> sortChildren(Set<Category> children, String sortDir) {
+		SortedSet<Category> sortedChildren = new TreeSet<>((Category catOne, Category catTwo) -> {
+				if(sortDir.equals("desc")) 
+					return catTwo.getName().compareTo(catOne.getName());  
+				
+				return catOne.getName().compareTo(catTwo.getName()); 
+			}
+		); 
+		
+		sortedChildren.addAll(children); 
+		return sortedChildren; 
 	}
 }

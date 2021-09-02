@@ -38,13 +38,13 @@ public class CategoryController {
 	private CategoryService service; 
 	
 	@GetMapping("/category") 
-	public String listAll(Model model) {
-		return getCategoriesPage(1, "name", "asc", null, model); 
+	public String listAll(Model model) throws CloneNotSupportedException {
+		return getCategoriesPage("name", "asc", null, model); 
 	}
 	
 	@GetMapping("/category/new") 
-	public String newCategory(Model model) {
-		List<Category> categoriesList = service.listHierarchicalCategories(); 
+	public String newCategory(Model model) throws CloneNotSupportedException {
+		List<Category> categoriesList = service.listHierarchicalCategories(null, "name", "asc"); 
 		
 		model.addAttribute("category", new Category()); 
 		model.addAttribute("categoriesList", categoriesList); 
@@ -53,31 +53,18 @@ public class CategoryController {
 		return "category/category_form"; 
 	}
 	
-	@GetMapping("/category/page/{pageNum}")
+	@GetMapping("/category/sort")
 	public String getCategoriesPage(
-			@PathVariable("pageNum") int pageNum, 
 			@Param("sortField") String sortField, 
 			@Param("sortDir") String sortDir, 
 			@Param("keyword") String keyword, 
-			Model model) {
+			Model model) throws CloneNotSupportedException {
 		
-		Page<Category> categoriesPage = service.getCategoriesByPage(pageNum -1, sortField, sortDir, keyword); 
-		
-		List<Category> categoriesList = categoriesPage.getContent(); 
-		
-		long startCount = (pageNum -1) * CategoryService.Category_PER_PAGE + 1;
-		long endCount = startCount + CategoryService.Category_PER_PAGE - 1; 
-		
-		if(endCount > categoriesPage.getTotalElements()) 
-			endCount = categoriesPage.getTotalElements(); 
+		List<Category> categoriesList = service.listHierarchicalCategories(keyword, sortField, sortDir); 
 		
 		String reverseSortDir = sortDir.equals("desc") ? "asc" : "desc"; 
 		
-		model.addAttribute("totalPages", categoriesPage.getTotalPages()); 
-		model.addAttribute("currentPage", pageNum); 
-		model.addAttribute("startCount", startCount); 
-		model.addAttribute("endCount", endCount); 
-		model.addAttribute("totalItems", categoriesPage.getTotalElements()); 
+		model.addAttribute("totalItems", categoriesList.size()); 
 		model.addAttribute("sortField", sortField); 
 		model.addAttribute("sortDir", sortDir); 
 		model.addAttribute("reverseSortDir", reverseSortDir); 
@@ -117,16 +104,16 @@ public class CategoryController {
 
 	private String getRedirectUrlToAffectedCategory(Category category) {
 		String categoryName = category.getName(); 
-		return "redirect:/category/page/1?sortField=id&sortDir=asc&keyword=" + categoryName;
+		return "redirect:/category/sort?sortField=name&sortDir=asc&keyword=" + categoryName;
 	}
 	
 	@GetMapping("/category/edit/{id}")
 	public String editCategory(@PathVariable(name = "id") Integer id, 
 			RedirectAttributes redirectAttributes, 
-			Model model) {
+			Model model) throws CloneNotSupportedException {
 		try {
 			Category category = service.getCategory(id);
-			List<Category> categoriesList = service.listHierarchicalCategories(); 
+			List<Category> categoriesList = service.getDropDownlistCategories(); 
 			
 			model.addAttribute("category", category); 
 			model.addAttribute("categoriesList", categoriesList);
@@ -145,6 +132,10 @@ public class CategoryController {
 			RedirectAttributes redirectAttributes) {
 		try {
 			service.deleteCategory(id); 
+			
+			String dir = "../category-images/" + id; 
+			FileUploadUtil.removeDir(dir); 
+			
 			redirectAttributes.addFlashAttribute("message", "The category with ID [" + id + "] has been deleted"); 
 		} catch (CategoryNotFoundException e) {
 			redirectAttributes.addFlashAttribute("message", e.getMessage()); 
@@ -166,19 +157,19 @@ public class CategoryController {
 	
 	@GetMapping("/category/export/csv")
 	public void exportToCSV(HttpServletResponse response) throws IOException {
-		List<Category> categoriesList = service.listCategories(); 
+		List<Category> categoriesList = service.listCategories(null, "name", "asc"); 
 		CategoryExporter.exportToCSV(categoriesList, response); 
 	}
 	
 	@GetMapping("/category/export/excel")
 	public void exportToExcel(HttpServletResponse response) throws IOException {
-		List<Category> categoriesList = service.listCategories(); 
+		List<Category> categoriesList = service.listCategories(null, "name", "asc"); 
 		CategoryExporter.exportToExcel(categoriesList, response); 
 	}
 	
 	@GetMapping("/category/export/pdf")
 	public void exportToPDF(HttpServletResponse response) throws IOException {
-		List<Category> categoriesList = service.listCategories(); 
+		List<Category> categoriesList = service.listCategories(null, "name", "asc"); 
 		CategoryExporter.exportToPDF(categoriesList, response); 
 	}
 }

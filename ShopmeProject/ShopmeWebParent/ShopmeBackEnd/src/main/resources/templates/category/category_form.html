@@ -78,38 +78,38 @@
 		<!--Footer-->
 		<div th:replace="fragments :: footer" />
 		
-	<script type="text/javascript">
-		moduleURL = "[[@{/category}]]"; 
+		<script type="text/javascript">
+			moduleURL = "[[@{/category}]]"; 
+			
+			function checkUnique(form) {
+				cateID = $("#id").val(); 
+				cateName = $("#name").val(); 
+				cateAlias = $("#alias").val(); 
+				
+				csrfValue = $("input[name='_csrf']").val(); 
+				
+				url = "[[@{/category/check_unique}]]"; 
+				
+				params = {id: cateID, name: cateName, alias: cateAlias, _csrf: csrfValue}; 
+				
+				$.post(url, params, function(response) {
+					if(response == "OK") {
+						form.submit(); 
+					} else if(response == "DublicatedName") {
+						showWarningModalDialog("The Name [" + cateName + "] is already used"); 
+					} else if(response == "DublicatedAlias") {
+						showWarningModalDialog("The Alias [" + cateAlias + "] is already used"); 
+					} else {
+						showErrorModalDialog("Unknowen response from the server"); 
+					}
+				}).fail(function() {
+					showErrorModalDialog("Couldn't connect to the server'");
+				}); 
+				
+				return false; 
+			} 
+		</script>
 		
-		function checkUnique(form) {
-			cateID = $("#id").val(); 
-			cateName = $("#name").val(); 
-			cateAlias = $("#alias").val(); 
-			
-			csrfValue = $("input[name='_csrf']").val(); 
-			
-			url = "[[@{/category/check_unique}]]"; 
-			
-			params = {id: cateID, name: cateName, alias: cateAlias, _csrf: csrfValue}; 
-			
-			$.post(url, params, function(response) {
-				if(response == "OK") {
-					form.submit(); 
-				} else if(response == "DublicatedName") {
-					showWarningModalDialog("The Name [" + cateName + "] is already used"); 
-				} else if(response == "DublicatedAlias") {
-					showWarningModalDialog("The Alias [" + cateAlias + "] is already used"); 
-				} else {
-					showErrorModalDialog("Unknowen response from the server"); 
-				}
-			}).fail(function() {
-				showErrorModalDialog("Couldn't connect to the server'");
-			}); 
-			
-			return false; 
-		} 
-	</script>
-	
-	<script th:src="@{/js/common_form.js}"></script>
+		<script th:src="@{/js/common_form.js}"></script>
 	</body>
 </html>

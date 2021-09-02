@@ -98,30 +98,30 @@
 		<!--Footer-->
 		<div th:replace="fragments :: footer" />
 		
-	<script type="text/javascript">
-		moduleURL = "[[@{/users}]]"; 
-		
-		function checkEmailDuplicate(form) {
-			url = "[[@{/users/check_email}]]";
-			userEmail = $("#email").val(); 
-			userId = $("#id").val(); 
-			csrfValue = $("input[name = '_csrf']").val(); 
-			params = {id: userId, email: userEmail, _csrf: csrfValue}; 
+		<script type="text/javascript">
+			moduleURL = "[[@{/users}]]"; 
 			
-			$.post(url, params, function(response) {
-				if(response == "OK") {
-					form.submit(); 
-				} else if(response == "Dublicated") {
-					showWarningModalDialog("The Email [" + userEmail + "] is already used"); 
-				} else {
-					showErrorModalDialog("Unknowen response from the server"); 
-				}
-			}).fail(function() {
-				showErrorModalDialog("Couldn't connect to the server'");
-			}); 
-			return false; 
-		}
-	</script>
-	<script th:src="@{/js/common_form.js}"></script>
+			function checkEmailDuplicate(form) {
+				url = "[[@{/users/check_email}]]";
+				userEmail = $("#email").val(); 
+				userId = $("#id").val(); 
+				csrfValue = $("input[name = '_csrf']").val(); 
+				params = {id: userId, email: userEmail, _csrf: csrfValue}; 
+				
+				$.post(url, params, function(response) {
+					if(response == "OK") {
+						form.submit(); 
+					} else if(response == "Dublicated") {
+						showWarningModalDialog("The Email [" + userEmail + "] is already used"); 
+					} else {
+						showErrorModalDialog("Unknowen response from the server"); 
+					}
+				}).fail(function() {
+					showErrorModalDialog("Couldn't connect to the server'");
+				}); 
+				return false; 
+			}
+		</script>
+		<script th:src="@{/js/common_form.js}"></script>
 	</body>
 </html>

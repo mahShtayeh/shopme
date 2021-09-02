@@ -16,7 +16,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "categories")
-public class Category {
+public class Category implements Cloneable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id; 
@@ -51,14 +51,16 @@ public class Category {
 		this.name = name; 
 	}
 	
-	public Category(Integer id, String name, String alias) {
+	public Category(Integer id, String name, String image) {
 		this.id = id; 
 		this.name = name; 
-		this.alias = alias; 
+		this.image = image; 
 	}
-
+	
 	public Category(String name, String alias, String image) {
-		this(name, alias, image, false); 
+		this.name = name; 
+		this.alias = alias; 
+		this.image = image; 
 	}
 	
 	public Category(String name, String alias, String image, Category parent) {
@@ -158,11 +160,21 @@ public class Category {
 		return "Category [name=" + name + ", alias=" + alias + "]";
 	}
 	
+	@Override
+	public Category clone() throws CloneNotSupportedException {
+		return (Category) super.clone();
+	}
+	
 	@Transient
 	public String getImagePath() {
 		if(this.id == null || this.image == null) 
 			return "/images/default_category.png"; 
 		
 		return "/category-images/" + this.getId() + "/" + this.image; 
+	} 
+	
+	@Transient 
+	public boolean isAParent() {
+		return this.children.size() > 0; 
 	}
 }

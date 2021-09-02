@@ -1,95 +1,94 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:fragment="page_head(title)">
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-		
-		<title>[[${title}]]</title>
-		
-		<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
-		<link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}" />
-		<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
-		
-		<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
-		<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-		<script type="text/javascript" th:src="@{/js/common.js}"></script>
-	</head>
-	
-	<body>
-		<th th:fragment="column_link(fieldName, columnLabel, baseUrl, removeTag)" th:remove=${removeTag}>
-			<a class="text-white"
-				th:href="@{'/' + ${baseUrl} + '/page/' + ${currentPage} + '?sortField=' + ${fieldName} + '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
-				[[${columnLabel}]]
-			</a>
-			<span th:if="${sortField == fieldName}"
-				th:class="${sortDir == 'desc' ? 'fas fa-sort-down' : 'fas fa-sort-up'}"></span>
-		</th>
-		
-		<a th:fragment="page_link(baseUrl, pageNum, pageLabel)" class="page-link"
-			th:href="@{'/' + ${baseUrl} + '/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
-			[[${pageLabel}]]
+
+<head th:fragment="page_head(title)">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+	<title>[[${title}]]</title>
+
+	<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+
+	<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+	<script type="text/javascript" th:src="@{/js/common.js}"></script>
+</head>
+
+<body>
+	<th th:fragment="column_link(fieldName, columnLabel, baseUrl, removeTag)" th:remove=${removeTag}>
+		<a class="text-white"
+			th:href="@{'/' + ${baseUrl} + '/page/' + ${currentPage} + '?sortField=' + ${fieldName} + '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+			[[${columnLabel}]]
 		</a>
-		
-		<div th:fragment="less_detail_div_link()">
-			<div th:each="user : ${listUsers}" class="row m-1">
-				<div class="col-4">
-					<img th:src="@{${user.photosImagePath == null ? 'images/default-user.png' : user.photosImagePath}}"
-						style="width: 96px; height: 96px;" />
-				</div>
-				<div class="col-8">
-					<div>[[${user.fullName}]]</div>
-					<div>[[${user.roles}]]</div>
-					<div class="mt-2">
-						<a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-blue"
-							th:href="@{'/users/' + ${user.id} + '/enabled/false'}" title="Disable this user"></a>
-						<a th:if="${user.enabled == false}" class="fas fa-circle fa-2x icon-dark"
-							th:href="@{'/users/' + ${user.id} + '/enabled/true'}" title="Enable this user"></a>
-						&nbsp;
-						<a class="fas fa-user-edit fa-2x icon-green" th:href="@{'/users/edit/' + ${user.id}}"
-							title="Edit this user"></a>
-						&nbsp;
-						<a class="fas fa-user-minus fa-2x icon-red link-delete"
-							th:href="@{'/users/delete/' + ${user.id}}" th:userId="${user.id}"
-							title="Delete this user"></a>
-					</div>
-				</div>
-				<div>&nbsp;</div>
-			</div>
-		</div>
-		
-		<tr th:fragment="full_detail_tr_link()" th:each="user : ${listUsers}">
-			<td class="hideable-column">[[${user.id}]]</td>
-			<td>
+		<span th:if="${sortField == fieldName}"
+			th:class="${sortDir == 'desc' ? 'fas fa-sort-down' : 'fas fa-sort-up'}"></span>
+	</th>
+
+	<a th:fragment="page_link(baseUrl, pageNum, pageLabel)" class="page-link"
+		th:href="@{'/' + ${baseUrl} + '/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+		[[${pageLabel}]]
+	</a>
+
+	<div th:fragment="less_detail_div_link()">
+		<div th:each="user : ${listUsers}" class="row m-1">
+			<div class="col-4">
 				<img th:src="@{${user.photosImagePath == null ? 'images/default-user.png' : user.photosImagePath}}"
 					style="width: 96px; height: 96px;" />
-			</td>
-			<td class="hideable-column">[[${user.email}]]</td>
-			<td>[[${user.firstName}]]</td>
-			<td>[[${user.lastName}]]</td>
-			<td>[[${user.roles}]]</td>
-			<td>
-				<a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-blue"
-					th:href="@{'/users/' + ${user.id} + '/enabled/false'}" title="Disable this user"></a>
-				<a th:if="${user.enabled == false}" class="fas fa-circle fa-2x icon-dark"
-					th:href="@{'/users/' + ${user.id} + '/enabled/true'}" title="Enable this user"></a>
-			</td>
-			<td>
-				<a class="fas fa-user-edit fa-2x icon-green" th:href="@{'/users/edit/' + ${user.id}}"
-					title="Edit this user"></a>
-				&nbsp;
-				<a class="fas fa-user-minus fa-2x icon-red link-delete"
-					th:href="@{'/users/delete/' + ${user.id}}" th:userId="${user.id}"
-					title="Delete this user"></a>
-			</td>
-		</tr>
-		
-		<li th:fragment="nav_link(url, label)" class="nav-item">
-			<a class="nav-link" th:href="@{${url}}">[[${label}]]</a>
-		</li>
-		
-		<!--Footer-->
-		<div th:fragment="footer" class="text-center">
-			<p>Shopme Control Panel - Copyrigth &copy; Shopme</p>
+			</div>
+			<div class="col-8">
+				<div>[[${user.fullName}]]</div>
+				<div>[[${user.roles}]]</div>
+				<div class="mt-2">
+					<a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-blue"
+						th:href="@{'/users/' + ${user.id} + '/enabled/false'}" title="Disable this user"></a>
+					<a th:if="${user.enabled == false}" class="fas fa-circle fa-2x icon-dark"
+						th:href="@{'/users/' + ${user.id} + '/enabled/true'}" title="Enable this user"></a>
+					&nbsp;
+					<a class="fas fa-user-edit fa-2x icon-green" th:href="@{'/users/edit/' + ${user.id}}"
+						title="Edit this user"></a>
+					&nbsp;
+					<a class="fas fa-user-minus fa-2x icon-red link-delete" th:href="@{'/users/delete/' + ${user.id}}"
+						th:toDeleteId="${user.id}" th:objType="User" title="Delete this user"></a>
+				</div>
+			</div>
+			<div>&nbsp;</div>
 		</div>
-	</body>
+	</div>
+
+	<tr th:fragment="full_detail_tr_link()" th:each="user : ${listUsers}">
+		<td class="hideable-column">[[${user.id}]]</td>
+		<td>
+			<img th:src="@{${user.photosImagePath == null ? 'images/default-user.png' : user.photosImagePath}}"
+				style="width: 96px; height: 96px;" />
+		</td>
+		<td class="hideable-column">[[${user.email}]]</td>
+		<td>[[${user.firstName}]]</td>
+		<td>[[${user.lastName}]]</td>
+		<td>[[${user.roles}]]</td>
+		<td>
+			<a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-blue"
+				th:href="@{'/users/' + ${user.id} + '/enabled/false'}" title="Disable this user"></a>
+			<a th:if="${user.enabled == false}" class="fas fa-circle fa-2x icon-dark"
+				th:href="@{'/users/' + ${user.id} + '/enabled/true'}" title="Enable this user"></a>
+		</td>
+		<td>
+			<a class="fas fa-user-edit fa-2x icon-green" th:href="@{'/users/edit/' + ${user.id}}"
+				title="Edit this user"></a>
+			&nbsp;
+			<a class="fas fa-user-minus fa-2x icon-red link-delete" th:href="@{'/users/delete/' + ${user.id}}"
+				th:toDeleteId="${user.id}" th:objType="User" title="Delete this user"></a>
+		</td>
+	</tr>
+
+	<li th:fragment="nav_link(url, label)" class="nav-item">
+		<a class="nav-link" th:href="@{${url}}">[[${label}]]</a>
+	</li>
+
+	<!--Footer-->
+	<div th:fragment="footer" class="text-center">
+		<p>Shopme Control Panel - Copyrigth &copy; Shopme</p>
+	</div>
+</body>
 </html>

@@ -4,7 +4,6 @@
 <head th:replace="fragments :: page_head('Categories - Shopme Admin')"/>
 
 <body>
-
 	<!--Nav bar div-->
 	<div th:replace="navigation :: nav_bar"/>
 	
@@ -26,7 +25,7 @@
 		
 		<!--Search form-->
 		<div>
-			<form th:action="@{/category/page/1}" class="form-inline m-3">
+			<form th:action="@{/category/sort}" class="form-inline m-3">
 				<input type="hidden" name="sortField" th:value="${sortField}" />
 				<input type="hidden" name="sortDir" th:value="${sortDir}" />
 
@@ -37,7 +36,7 @@
 					<i class="fas fa-search"></i>
 				</button>
 				&nbsp;&nbsp;
-				<button type="button" value="Clear" class="btn btn-secondary" onclick="clearFilter()">
+				<button type="button" value="Clear" class="btn btn-secondary" onclick="clearFilter('/category')">
 					<i class="fas fa-backspace"></i>
 				</button>
 			</form>
@@ -48,16 +47,17 @@
 			<table class="table table-bordered table-striped table-hover table-responsive-xl">
 				<thead class="thead-dark">
 					<tr>
-						<th th:replace="fragments :: column_link('id', 'ID', 'category', 'none')" />
+						<th th:replace="category/category_fragments :: column_link('id', 'ID', 'category', 'none')" />
 						<th>Image</th>
-						<th th:replace="fragments :: column_link('name', 'Name', 'category', 'none')" />
+						<th th:replace="category/category_fragments :: column_link('name', 'Name', 'category', 'none')" />
 						<th class="hideable-column">
-							<th th:replace="fragments :: column_link('alias', 'Alias', 'category', 'tag')" />
+							<th th:replace="category/category_fragments :: column_link('alias', 'Alias', 'category', 'tag')" />
 						</th>
-						<th th:replace="fragments :: column_link('enabled', 'Enabled', 'category', 'none')" />
+						<th th:replace="category/category_fragments :: column_link('enabled', 'Enabled', 'category', 'none')" />
 						<th></th>
 					</tr>
 				</thead>
+				
 				<tbody>
 					<tr th:replace="category/category_fragments :: full_detail_tr_link()" />
 				</tbody>
@@ -70,80 +70,20 @@
 		</div>
 	</div>
 	
-	<!--Pagination label-->
-	<div class="text-center m-1" th:if="${totalItems > 0}">
-		<span>Showing # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
-	</div>
-	
 	<!--No user found annotation-->
 	<div class="text-center m-1" th:unless="${totalItems > 0}">
 		<span>No Categories Found</span>
 	</div>
 	
-	<!--Pages nav bar-->
-	<nav th:if="${totalPages > 1}">
-		<ul class="pagination justify-content-center flex-wrap">
-			<li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-				<a th:replace="fragments :: page_link(category, 1, First)" />
-			</li>
-			<li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-				<a th:replace="fragments :: page_link(category, ${currentPage - 1}, Previous)" />
-			</li>
-			<li th:class="${currentPage != i ? 'page-item' : 'page-item active'}" th:each="i : ${#numbers.sequence(1, totalPages)}">
-		    	<a th:replace="fragments :: page_link(category, ${i}, ${i})" />
-		    </li>
-		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-		    	<a th:replace="fragments :: page_link(category, ${currentPage + 1}, Next)" />
-		    </li>
-		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-		    	<a th:replace="fragments :: page_link(category, ${totalPages}, Last)" />
-		    </li>
-		  </ul>
-		</nav>
-		
-	<!--Confirmation dialog-->
-	<div class="modal fade text-center" id="confirmationDialog">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" id="modalTitle">Delete Confirmation</h4>
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-				</div>
-
-				<div class="modal-body">
-					<span id="modalBody"></span>
-				</div>
-
-				<div class="modal-footer">
-					<a id="yesBtn" class="btn btn-success" href="">Yes</a>
-					<button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-				</div>
-			</div>
-		</div>
-	</div>
+	<!--Modal Confirmation Dialog-->
+	<div th:replace="modal_fragments :: delete_modal_dialog" />
 	
 	<!--Footer-->
 	<div th:replace="fragments :: footer" />
-
+	
+	<script th:src="@{/js/common_list.js}"></script>
 	<script type="text/javascript">
-		$(document).ready(function () {
-			$(".link-delete").on("click", function (e) {
-				e.preventDefault();
-
-				link = $(this);
-				categoryId = link.attr("categoryId");
-
-				$("#yesBtn").attr("href", link.attr("href"));
-				$("#modalBody").text("Are you sure you want to delete the Category with ID [" + categoryId + "] ?");
-				$("#confirmationDialog").modal();
-			});
-		});
-
-		function clearFilter() {
-			//let url = "[[@{'/category/page/1?sortField=' + ${sortField} + 'sortDir=' + ${sortDir}}]]";
-			let url = "[[@{/category}]]";
-			window.location.replace(url);
-		}
+		moduleURL = "[[@{/category}]]"; 
 	</script>
 </body>
 

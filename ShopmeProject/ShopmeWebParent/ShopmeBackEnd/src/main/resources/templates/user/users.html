@@ -4,7 +4,6 @@
 <head th:replace="fragments :: page_head('Users - Shopme Admin')"/>
 
 <body>
-
 	<!--Nav bar div-->
 	<div th:replace="navigation :: nav_bar"/>
 	
@@ -105,49 +104,15 @@
 		  </ul>
 		</nav>
 		
-	<!--Confirmation dialog-->
-	<div class="modal fade text-center" id="confirmationDialog">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" id="modalTitle">Delete Confirmation</h4>
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-				</div>
-
-				<div class="modal-body">
-					<span id="modalBody"></span>
-				</div>
-
-				<div class="modal-footer">
-					<a id="yesBtn" class="btn btn-success" href="">Yes</a>
-					<button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-				</div>
-			</div>
-		</div>
-	</div>
+	<!--Modal Confirmation Dialog-->
+	<div th:replace="modal_fragments :: delete_modal_dialog" />
 	
 	<!--Footer-->
 	<div th:replace="fragments :: footer" />
-
+	
+	<script th:src="@{/js/common_list.js}"></script>
 	<script type="text/javascript">
-		$(document).ready(function () {
-			$(".link-delete").on("click", function (e) {
-				e.preventDefault();
-
-				link = $(this);
-				userId = link.attr("userId");
-
-				$("#yesBtn").attr("href", link.attr("href"));
-				$("#modalBody").text("Are you sure you want to delete the user with ID [" + userId + "] ?");
-				$("#confirmationDialog").modal();
-			});
-		});
-
-		function clearFilter() {
-			//let url = "[[@{'/users/page/1?sortField=' + ${sortField} + 'sortDir=' + ${sortDir}}]]";
-			let url = "[[@{/users}]]";
-			window.location.replace(url);
-		}
+		moduleURL = "[[@{/users}]]"; 
 	</script>
 </body>
 
