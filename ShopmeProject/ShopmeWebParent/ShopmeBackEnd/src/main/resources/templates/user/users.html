@@ -73,36 +73,12 @@
 		</div>
 	</div>
 	
-	<!--Pagination label-->
-	<div class="text-center m-1" th:if="${totalItems > 0}">
-		<span>Showing # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
-	</div>
-	
 	<!--No user found annotation-->
 	<div class="text-center m-1" th:unless="${totalItems > 0}">
 		<span>No Users Found</span>
 	</div>
 	
-	<!--Pages nav bar-->
-	<nav th:if="${totalPages > 1}">
-		<ul class="pagination justify-content-center flex-wrap">
-			<li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-				<a th:replace="fragments :: page_link(users, 1, First)" />
-			</li>
-			<li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-				<a th:replace="fragments :: page_link(users, ${currentPage - 1}, Previous)" />
-			</li>
-			<li th:class="${currentPage != i ? 'page-item' : 'page-item active'}" th:each="i : ${#numbers.sequence(1, totalPages)}">
-		    	<a th:replace="fragments :: page_link(users, ${i}, ${i})" />
-		    </li>
-		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-		    	<a th:replace="fragments :: page_link(users, ${currentPage + 1}, Next)" />
-		    </li>
-		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-		    	<a th:replace="fragments :: page_link(users, ${totalPages}, Last)" />
-		    </li>
-		  </ul>
-		</nav>
+	<div th:replace="fragments :: nav_bar('users', 'User')"></div>
 		
 	<!--Modal Confirmation Dialog-->
 	<div th:replace="modal_fragments :: delete_modal_dialog" />

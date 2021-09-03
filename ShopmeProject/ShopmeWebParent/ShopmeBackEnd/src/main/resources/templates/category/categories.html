@@ -70,6 +70,8 @@
 		</div>
 	</div>
 	
+	<div th:replace="fragments :: nav_bar('category', 'Root Category')"></div>
+	
 	<!--No user found annotation-->
 	<div class="text-center m-1" th:unless="${totalItems > 0}">
 		<span>No Categories Found</span>

@@ -39,7 +39,7 @@ public class CategoryController {
 	
 	@GetMapping("/category") 
 	public String listAll(Model model) throws CloneNotSupportedException {
-		return getCategoriesPage("name", "asc", null, model); 
+		return getCategoriesPage(1, "name", "asc", null, model); 
 	}
 	
 	@GetMapping("/category/new") 
@@ -53,18 +53,30 @@ public class CategoryController {
 		return "category/category_form"; 
 	}
 	
-	@GetMapping("/category/sort")
+	@GetMapping("/category/page/{pageNum}")
 	public String getCategoriesPage(
+			@PathVariable("pageNum") int pageNum, 
 			@Param("sortField") String sortField, 
 			@Param("sortDir") String sortDir, 
 			@Param("keyword") String keyword, 
 			Model model) throws CloneNotSupportedException {
 		
-		List<Category> categoriesList = service.listHierarchicalCategories(keyword, sortField, sortDir); 
+		List<Object> pair = service.listHierarchicalCategoriesByPage(pageNum, sortField, sortDir);; 
+		List<Category> categoriesList = (List<Category>) pair.get(0); 
+		Page<Category> categoriesPage = (Page<Category>) pair.get(1); 
+		
+		long startCount = (pageNum -1) * CategoryService.CATEGORIES_PER_PAGE + 1;
+		long endCount = startCount + CategoryService.CATEGORIES_PER_PAGE - 1; 
+		if(endCount > categoriesPage.getTotalElements()) 
+			endCount = categoriesPage.getTotalElements(); 
 		
 		String reverseSortDir = sortDir.equals("desc") ? "asc" : "desc"; 
 		
-		model.addAttribute("totalItems", categoriesList.size()); 
+		model.addAttribute("totalPages", categoriesPage.getTotalPages()); 
+		model.addAttribute("currentPage", pageNum); 
+		model.addAttribute("startCount", startCount); 
+		model.addAttribute("endCount", endCount); 
+		model.addAttribute("totalItems", categoriesPage.getTotalElements()); 
 		model.addAttribute("sortField", sortField); 
 		model.addAttribute("sortDir", sortDir); 
 		model.addAttribute("reverseSortDir", reverseSortDir); 

@@ -11,6 +11,9 @@ import javax.transaction.Transactional;
 
 import org.aspectj.weaver.bcel.UnwovenClassFile.ChildClass;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +23,22 @@ import com.shopme.common.entity.Category;
 @Transactional
 public class CategoryService {
 
-	public static final int Category_PER_PAGE = 10;
-
+	public static final int CATEGORIES_PER_PAGE = 2;
+	
 	@Autowired
-	private CategoryRepository categoryRepo;
+	private CategoryRepository categoryRepo; 
+	
+	public List<Object> listHierarchicalCategoriesByPage(int pageNum, String sortField, String sortDir) throws CloneNotSupportedException {
+		Sort sort = Sort.by(sortField); 
+		sort = sortDir.equals("desc") ? sort.descending() : sort.ascending(); 
+		
+		Pageable pageConf = PageRequest.of(pageNum - 1, CATEGORIES_PER_PAGE, sort); 
+		
+		Page<Category> pageOfCategories = categoryRepo.findByParent(null, pageConf); 
+		List<Category> rootCategories = pageOfCategories.getContent(); 
+		
+		return List.of(listHierarchicalRootCategories(rootCategories, sortField, sortDir), pageOfCategories); 
+	}
 
 	public List<Category> listCategories(String keyword, String sortField, String sortDir) {
 		Sort sort = Sort.by(sortField); 
@@ -34,7 +49,30 @@ public class CategoryService {
 		
 		return categoryRepo.findAll(keyword); 
 	}
+	
+	public List<Category> listHierarchicalRootCategories(List<Category> categories, String sortField, String sortDir) throws CloneNotSupportedException {
+		List<Category> listHierarchey = new ArrayList<>(); 
+		
+		for (Category category : categories) {
+			if (category.getParent() == null) {
+				listHierarchey.add(category.clone()); 
 
+				SortedSet<Category> sortedChildren = this.sortChildren(category.getChildren(), "asc");
+
+				for (Category child : sortedChildren) {
+					Category childClone = child.clone(); 
+					childClone.setName("--" + childClone.getName()); 
+					
+					listHierarchey.add(childClone);
+					
+					ListChildren(child, 2, listHierarchey, "asc");
+				}
+			}
+		}
+
+		return listHierarchey;
+	}
+	
 	public List<Category> listHierarchicalCategories(String keyword, String sortField, String sortDir) throws CloneNotSupportedException {
 		List<Category> listHierarchey = new ArrayList<>(); 
 		
