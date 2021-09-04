@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -23,13 +22,7 @@ import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.category.CategoryExporter;
 import com.shopme.admin.category.CategoryNotFoundException;
 import com.shopme.admin.category.CategoryService;
-import com.shopme.admin.security.ShopmeUserDetails;
-import com.shopme.admin.user.UserExporter;
-import com.shopme.admin.user.UserNotFoundException;
-import com.shopme.admin.user.UserService;
 import com.shopme.common.entity.Category;
-import com.shopme.common.entity.Role;
-import com.shopme.common.entity.User;
 
 @Controller
 public class CategoryController {
@@ -44,7 +37,7 @@ public class CategoryController {
 	
 	@GetMapping("/category/new") 
 	public String newCategory(Model model) throws CloneNotSupportedException {
-		List<Category> categoriesList = service.listHierarchicalCategories(null, "name", "asc"); 
+		List<Category> categoriesList = service.listHierarchicalCategories("name", "asc"); 
 		
 		model.addAttribute("category", new Category()); 
 		model.addAttribute("categoriesList", categoriesList); 
@@ -61,12 +54,20 @@ public class CategoryController {
 			@Param("keyword") String keyword, 
 			Model model) throws CloneNotSupportedException {
 		
-		List<Object> pair = service.listHierarchicalCategoriesByPage(pageNum, sortField, sortDir);; 
-		List<Category> categoriesList = (List<Category>) pair.get(0); 
-		Page<Category> categoriesPage = (Page<Category>) pair.get(1); 
+		List<Category> categoriesList; 
+		Page<Category> categoriesPage; 
 		
-		long startCount = (pageNum -1) * CategoryService.CATEGORIES_PER_PAGE + 1;
-		long endCount = startCount + CategoryService.CATEGORIES_PER_PAGE - 1; 
+		if(keyword != null && !keyword.isEmpty()) {
+			categoriesPage = service.listCategoriesPage(pageNum, sortField, sortDir, keyword); 
+			categoriesList = categoriesPage.getContent(); 
+		} else {
+			List<Object> pair = service.listHierarchicalCategoriesByPage(pageNum, sortField, sortDir);; 
+			categoriesList = (List<Category>) pair.get(0); 
+			categoriesPage = (Page<Category>) pair.get(1); 
+		}
+		
+		long startCount = (pageNum -1) * CategoryService.ROOT_CATEGORIES_PER_PAGE + 1;
+		long endCount = startCount + CategoryService.ROOT_CATEGORIES_PER_PAGE - 1; 
 		if(endCount > categoriesPage.getTotalElements()) 
 			endCount = categoriesPage.getTotalElements(); 
 		
@@ -169,19 +170,19 @@ public class CategoryController {
 	
 	@GetMapping("/category/export/csv")
 	public void exportToCSV(HttpServletResponse response) throws IOException {
-		List<Category> categoriesList = service.listCategories(null, "name", "asc"); 
+		List<Category> categoriesList = service.listCategories("name", "asc"); 
 		CategoryExporter.exportToCSV(categoriesList, response); 
 	}
 	
 	@GetMapping("/category/export/excel")
 	public void exportToExcel(HttpServletResponse response) throws IOException {
-		List<Category> categoriesList = service.listCategories(null, "name", "asc"); 
+		List<Category> categoriesList = service.listCategories("name", "asc"); 
 		CategoryExporter.exportToExcel(categoriesList, response); 
 	}
 	
 	@GetMapping("/category/export/pdf")
 	public void exportToPDF(HttpServletResponse response) throws IOException {
-		List<Category> categoriesList = service.listCategories(null, "name", "asc"); 
+		List<Category> categoriesList = service.listCategories("name", "asc"); 
 		CategoryExporter.exportToPDF(categoriesList, response); 
 	}
 }

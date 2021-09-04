@@ -23,7 +23,8 @@ import com.shopme.common.entity.Category;
 @Transactional
 public class CategoryService {
 
-	public static final int CATEGORIES_PER_PAGE = 2;
+	public static final int ROOT_CATEGORIES_PER_PAGE = 2; 
+	public static final int SEARCH_RESULT_CATEGORIES_PER_PAGE = 4;
 	
 	@Autowired
 	private CategoryRepository categoryRepo; 
@@ -32,7 +33,7 @@ public class CategoryService {
 		Sort sort = Sort.by(sortField); 
 		sort = sortDir.equals("desc") ? sort.descending() : sort.ascending(); 
 		
-		Pageable pageConf = PageRequest.of(pageNum - 1, CATEGORIES_PER_PAGE, sort); 
+		Pageable pageConf = PageRequest.of(pageNum - 1, ROOT_CATEGORIES_PER_PAGE, sort); 
 		
 		Page<Category> pageOfCategories = categoryRepo.findByParent(null, pageConf); 
 		List<Category> rootCategories = pageOfCategories.getContent(); 
@@ -40,14 +41,20 @@ public class CategoryService {
 		return List.of(listHierarchicalRootCategories(rootCategories, sortField, sortDir), pageOfCategories); 
 	}
 
-	public List<Category> listCategories(String keyword, String sortField, String sortDir) {
+	public List<Category> listCategories(String sortField, String sortDir) {
 		Sort sort = Sort.by(sortField); 
 		sort = (sortDir.equals("desc") ? sort.descending() : sort.ascending()); 
 		
-		if(keyword == null) 
-			return (List<Category>) categoryRepo.findAll(sort);
+		return (List<Category>) categoryRepo.findAll(sort); 
+	} 
+	
+	public Page<Category> listCategoriesPage(int pageNum, String sortField, String sortDir, String keyword) {
+		Sort sort = Sort.by(sortField); 
+		sort = (sortDir.equals("desc") ? sort.descending() : sort.ascending()); 
 		
-		return categoryRepo.findAll(keyword); 
+		Pageable pageConf = PageRequest.of(pageNum - 1,  SEARCH_RESULT_CATEGORIES_PER_PAGE, sort); 
+		
+		return categoryRepo.searchForCategory(keyword, pageConf); 
 	}
 	
 	public List<Category> listHierarchicalRootCategories(List<Category> categories, String sortField, String sortDir) throws CloneNotSupportedException {
@@ -73,10 +80,10 @@ public class CategoryService {
 		return listHierarchey;
 	}
 	
-	public List<Category> listHierarchicalCategories(String keyword, String sortField, String sortDir) throws CloneNotSupportedException {
+	public List<Category> listHierarchicalCategories(String sortField, String sortDir) throws CloneNotSupportedException {
 		List<Category> listHierarchey = new ArrayList<>(); 
 		
-		Iterable<Category> categories = this.listCategories(keyword, sortField, sortDir);
+		Iterable<Category> categories = this.listCategories(sortField, sortDir);
 
 		for (Category category : categories) {
 			if (category.getParent() == null) {
@@ -99,7 +106,7 @@ public class CategoryService {
 	}
 	
 	public List<Category> getDropDownlistCategories() throws CloneNotSupportedException {
-		return listHierarchicalCategories(null, "name", "asc"); 
+		return listHierarchicalCategories("name", "asc"); 
 	}
 
 	private void ListChildren(Category parent, int level, List<Category> listHierarchey, String sortDir) throws CloneNotSupportedException {

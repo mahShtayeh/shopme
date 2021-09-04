@@ -15,6 +15,5 @@ $(document).ready(
 );
 
 function clearFilter() {
-	//let url = "[[@{'/users/page/1?sortField=' + ${sortField} + 'sortDir=' + ${sortDir}}]]";
 	window.location.replace(moduleURL);
 }

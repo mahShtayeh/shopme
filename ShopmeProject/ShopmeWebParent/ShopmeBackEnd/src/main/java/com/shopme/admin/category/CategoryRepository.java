@@ -20,7 +20,7 @@ public interface CategoryRepository extends PagingAndSortingRepository<Category,
 		 + "FROM Category c "
 		 + "WHERE CONCAT(c.id, ' ', c.name, ' ', c.alias) "
 		 + "LIKE %?1%")
-	public List<Category> findAll(String keyword);
+	public Page<Category> searchForCategory(String keyword, Pageable pageable); 
 	
 	@Query("UPDATE Category c SET c.enabled = ?2 WHERE c.id = ?1")
 	@Modifying

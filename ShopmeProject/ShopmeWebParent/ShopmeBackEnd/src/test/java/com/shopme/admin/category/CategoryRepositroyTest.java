@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -100,5 +101,17 @@ public class CategoryRepositroyTest {
 		
 		assertThat(category).isNotNull(); 
 		assertThat(category.getName().equals(alias)); 
+	} 
+	
+	@Test 
+	public void searchForCategoryTest() {
+		String keyword = "electronics"; 
+		Sort sort = Sort.by("name").ascending(); 
+		
+		Pageable pageConf = PageRequest.of(0, CategoryService.SEARCH_RESULT_CATEGORIES_PER_PAGE, sort); 
+		Page<Category> categoriesPage = repo.searchForCategory(keyword, pageConf); 
+		List<Category> categoriesList = categoriesPage.getContent(); 
+		
+		assertThat(categoriesList.size()).isGreaterThan(0); 
 	}
 }
