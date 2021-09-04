@@ -37,7 +37,7 @@ public class CategoryController {
 	
 	@GetMapping("/category/new") 
 	public String newCategory(Model model) throws CloneNotSupportedException {
-		List<Category> categoriesList = service.listHierarchicalCategories("name", "asc"); 
+		List<Category> categoriesList = service.listHierarchicalCategories("name", "asc", "--"); 
 		
 		model.addAttribute("category", new Category()); 
 		model.addAttribute("categoriesList", categoriesList); 
@@ -169,8 +169,8 @@ public class CategoryController {
 	}
 	
 	@GetMapping("/category/export/csv")
-	public void exportToCSV(HttpServletResponse response) throws IOException {
-		List<Category> categoriesList = service.listCategories("name", "asc"); 
+	public void exportToCSV(HttpServletResponse response) throws IOException, CloneNotSupportedException {
+		List<Category> categoriesList = service.listHierarchicalCategories("name", "asc", "  "); 
 		CategoryExporter.exportToCSV(categoriesList, response); 
 	}
 	

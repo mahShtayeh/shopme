@@ -40,8 +40,8 @@ public class CategoryExporter {
 		
 		ICsvBeanWriter writer = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE); 
 		
-		String[] csvHeaders = {"ID", "Name", "Alias", "Parent", "Enabled"}; 
-		String[] rowMapping = {"id", "name", "alias", "parent", "enabled"}; 
+		String[] csvHeaders = {"ID", "Name"}; 
+		String[] rowMapping = {"id", "name"}; 
 		
 		writer.writeHeader(csvHeaders); 
 		

@@ -72,7 +72,7 @@ public class CategoryService {
 					
 					listHierarchey.add(childClone);
 					
-					ListChildren(child, 2, listHierarchey, "asc");
+					ListChildren(child, 2, listHierarchey, "asc", "--");
 				}
 			}
 		}
@@ -80,7 +80,7 @@ public class CategoryService {
 		return listHierarchey;
 	}
 	
-	public List<Category> listHierarchicalCategories(String sortField, String sortDir) throws CloneNotSupportedException {
+	public List<Category> listHierarchicalCategories(String sortField, String sortDir, String delemiter) throws CloneNotSupportedException {
 		List<Category> listHierarchey = new ArrayList<>(); 
 		
 		Iterable<Category> categories = this.listCategories(sortField, sortDir);
@@ -93,11 +93,11 @@ public class CategoryService {
 
 				for (Category child : sortedChildren) {
 					Category childClone = child.clone(); 
-					childClone.setName("--" + childClone.getName()); 
+					childClone.setName(delemiter + childClone.getName()); 
 					
 					listHierarchey.add(childClone);
 					
-					ListChildren(child, 2, listHierarchey, "asc");
+					ListChildren(child, 2, listHierarchey, "asc", delemiter);
 				}
 			}
 		}
@@ -106,24 +106,25 @@ public class CategoryService {
 	}
 	
 	public List<Category> getDropDownlistCategories() throws CloneNotSupportedException {
-		return listHierarchicalCategories("name", "asc"); 
+		return listHierarchicalCategories("name", "asc", "--"); 
 	}
 
-	private void ListChildren(Category parent, int level, List<Category> listHierarchey, String sortDir) throws CloneNotSupportedException {
+	private void ListChildren(Category parent, int level, List<Category> listHierarchey, String sortDir, 
+			String delimiter) throws CloneNotSupportedException {
 		SortedSet<Category> sortedChildren = this.sortChildren(parent.getChildren(), sortDir);
 
 		for (Category child : sortedChildren) {
 			StringBuilder hyphens = new StringBuilder();
 
 			for (int i = 0; i < level; i++)
-				hyphens.append("--");
+				hyphens.append(delimiter);
 
 			Category childClone = child.clone(); 
 			childClone.setName(hyphens + child.getName());
 
 			listHierarchey.add(childClone);
 
-			ListChildren(child, level + 1, listHierarchey, sortDir);
+			ListChildren(child, level + 1, listHierarchey, sortDir, delimiter);
 		}
 	}
 
