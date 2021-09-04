@@ -36,7 +36,7 @@
 	<div th:fragment="less_detail_div_link()">
 		<div th:each="category : ${categoriesList}" class="row m-1">
 			<div class="col-4">
-				<img style="width: 96px; height: 96px;" />
+				<img th:src="@{${category.imagePath}}" class="img-fluid" style="width: 96px; height: 96px;" />
 			</div>
 			<div class="col-8">
 				<div>[[${category.name}]]</div>
