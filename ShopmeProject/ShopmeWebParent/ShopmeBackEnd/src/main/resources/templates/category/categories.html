@@ -18,11 +18,6 @@
 			<a th:href="@{/category/export/pdf}" class="fas fa-file-pdf fa-2x icon-orange mr-2"></a>
 		</div>
 		
-		<!--Success alert message-->
-		<div th:if="${message != null}" class="alert alert-success text-center">
-			[[${message}]]
-		</div>
-		
 		<!--Search form-->
 		<div th:replace="fragments :: search_form('category') "></div>
 		
@@ -31,13 +26,13 @@
 			<table class="table table-bordered table-striped table-hover table-responsive-xl">
 				<thead class="thead-dark">
 					<tr>
-						<th th:replace="category/category_fragments :: column_link('id', 'ID', 'category', 'none')" />
+						<th th:replace="fragments :: column_link('id', 'ID', 'category', 'none')" />
 						<th>Image</th>
-						<th th:replace="category/category_fragments :: column_link('name', 'Name', 'category', 'none')" />
+						<th th:replace="fragments :: column_link('name', 'Name', 'category', 'none')" />
 						<th class="hideable-column">
-							<th th:replace="category/category_fragments :: column_link('alias', 'Alias', 'category', 'tag')" />
+							<th th:replace="fragments :: column_link('alias', 'Alias', 'category', 'tag')" />
 						</th>
-						<th th:replace="category/category_fragments :: column_link('enabled', 'Enabled', 'category', 'none')" />
+						<th th:replace="fragments :: column_link('enabled', 'Enabled', 'category', 'none')" />
 						<th></th>
 					</tr>
 				</thead>

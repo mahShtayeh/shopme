@@ -2,15 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <body>
-	<th th:fragment="column_link(fieldName, columnLabel, baseUrl, removeTag)" th:remove=${removeTag}>
-		<a class="text-white"
-			th:href="@{'/' + ${baseUrl} + '/page/' + ${currentPage} + '?sortField=' + ${fieldName} + '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
-			[[${columnLabel}]]
-		</a>
-		<span th:if="${sortField == fieldName}"
-			th:class="${sortDir == 'desc' ? 'fas fa-sort-down' : 'fas fa-sort-up'}"></span>
-	</th>
-
 	<tr th:fragment="full_detail_tr_link()" th:each="category : ${categoriesList}">
 		<td>[[${category.id}]]</td>
 		<td>
@@ -19,20 +10,17 @@
 		<td>[[${category.name}]]</td>
 		<td class="hideable-column">[[${category.alias}]]</td>
 		<td>
-			<a th:if="${category.enabled == true}" class="fas fa-check-circle fa-2x icon-blue"
-				th:href="@{'/category/' + ${category.id} + '/enabled/false'}" title="Disable this category"></a>
-			<a th:if="${category.enabled == false}" class="fas fa-circle fa-2x icon-dark"
-				th:href="@{'/category/' + ${category.id} + '/enabled/true'}" title="Enable this category"></a>
+			<th:block 
+				th:replace="fragments :: enable_status(${category.enabled}, 'Category', '/category/' + ${category.id})">
+			</th:block>
 		</td>
 		<td>
-			<a class="fas fa-pen-square fa-2x icon-green" th:href="@{'/category/edit/' + ${category.id}}"
-				title="Edit this category"></a>
-			&nbsp;
-			<a th:if="${!category.aParent}" class="fas fa-folder-minus fa-2x icon-red link-delete" th:href="@{'/category/delete/' + ${category.id}}"
-				th:toDeleteId="${category.id}" th:objType="Category" title="Delete this category"></a>
+			<th:block 
+				th:replace="fragments :: actions('Category', 'Category', 'category', ${category.id}, ${!category.aParent})">
+			</th:block>
 		</td>
 	</tr>
-
+	
 	<div th:fragment="less_detail_div_link()">
 		<div th:each="category : ${categoriesList}" class="row m-1">
 			<div class="col-4">
@@ -41,17 +29,13 @@
 			<div class="col-8">
 				<div>[[${category.name}]]</div>
 				<div class="mt-2">
-					<a th:if="${category.enabled == true}" class="fas fa-check-circle fa-2x icon-blue"
-						th:href="@{'/category/' + ${category.id} + '/enabled/false'}" title="Disable this category"></a>
-					<a th:if="${category.enabled == false}" class="fas fa-circle fa-2x icon-dark"
-						th:href="@{'/category/' + ${category.id} + '/enabled/true'}" title="Enable this category"></a>
+					<th:block 
+						th:replace="fragments :: enable_status(${category.enabled}, 'Category', '/category/' + ${category.id})">
+					</th:block>
 					&nbsp;
-					<a class="fas fa-pen-square fa-2x icon-green" th:href="@{'/category/edit/' + ${category.id}}"
-						title="Edit this category"></a>
-					&nbsp;
-					<a th:if="${!category.aParent}" class="fas fa-folder-minus fa-2x icon-red link-delete"
-						th:href="@{'/category/delete/' + ${category.id}}" th:toDeleteId="${category.id}"
-						th:objType="Category" title="Delete this category"></a>
+					<th:block 
+						th:replace="fragments :: actions('Category', 'Category', 'category', ${category.id}, ${!category.aParent})">
+					</th:block>
 				</div>
 			</div>
 			<div>&nbsp;</div>
