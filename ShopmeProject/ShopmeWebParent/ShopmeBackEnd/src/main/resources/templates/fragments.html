@@ -107,13 +107,13 @@
 	</th:block>
 	
 	<th:block th:fragment="actions(entityName, entityType, baseUrl, entityId, showDeleteBtn)"> 
-		<a class="fas fa-user-edit fa-2x icon-green" 
+		<a class="far fa-edit fa-2x icon-green" 
 			th:href="@{'/' + ${baseUrl} + '/edit/' + ${entityId}}"
 			th:title="'Edit this ' + ${entityName}">
 		</a>
 		&nbsp;
 		<a th:if="${showDeleteBtn}" 
-			class="fas fa-user-minus fa-2x icon-red link-delete" 
+			class="fas fa-trash-alt fa-2x icon-red link-delete" 
 			th:href="@{'/' + ${baseUrl} + '/delete/' + ${entityId}}" 
 			th:toDeleteId="${entityId}" 
 			th:objType="${entityType}" 

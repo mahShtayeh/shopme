@@ -157,7 +157,7 @@ public class Category implements Cloneable {
 
 	@Override
 	public String toString() {
-		return "Category [name=" + name + ", alias=" + alias + "]";
+		return this.getName();
 	}
 	
 	@Override
