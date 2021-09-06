@@ -1,5 +1,7 @@
 package com.shopme.admin.brand.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -10,12 +12,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.shopme.admin.brand.BrandService;
 import com.shopme.admin.category.CategoryService;
 import com.shopme.common.entity.Brand;
+import com.shopme.common.entity.Category;
 
 @Controller
 public class BrandController {
 	
 	@Autowired
 	private BrandService service; 
+	
+	@Autowired
+	private CategoryService categoryService; 
 	
 	@GetMapping("/brands")
 	public String getBrands(Model model) {
@@ -42,5 +48,17 @@ public class BrandController {
 		model.addAttribute("totalItems", brandsPage.getTotalElements()); 
 		
 		return "brands/brands";
+	}
+	
+	@GetMapping("/brands/new")
+	public String getNewBrandForm(Model model) throws CloneNotSupportedException {
+		Brand brand = new Brand(); 
+		List<Category> categoriesList = categoryService.getDropDownlistCategories(); 
+		
+		model.addAttribute("pageTitle", "Create New Brand"); 
+		model.addAttribute("brand", brand); 
+		model.addAttribute("categoriesList", categoriesList); 
+		
+		return "brands/brands_form"; 
 	}
 }

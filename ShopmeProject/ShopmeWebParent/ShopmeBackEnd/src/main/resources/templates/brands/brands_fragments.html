@@ -5,7 +5,7 @@
 	<tr th:fragment="full_detail_tr_link()" th:each="brand : ${brandsList}">
 		<td>[[${brand.id}]]</td>
 		<td>
-			<img th:src="@{images/default-brand.png}" class="img-fluid" style="width: 96px; height: 96px;" />
+			<img th:src="@{${brand.logoPath}}" class="img-fluid" style="width: 96px; height: 96px;" />
 		</td>
 		<td>[[${brand.name}]]</td>
 		<td>

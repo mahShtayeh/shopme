@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "brands")
@@ -87,7 +88,15 @@ public class Brand {
 			this.addCategory(category); 
 		}
 	}
-
+	
+	@Transient
+	public String getLogoPath() {
+		if(this.id == null || this.logo == null) 
+			return "/images/default-logo.png"; 
+		
+		return "/brands-images/" + this.getId() + "/" + this.logo; 
+	} 
+	
 	@Override
 	public String toString() {
 		return "Brand [id=" + id + ", name=" + name + ", logo=" + logo + ", categories=" + categories + "]";
