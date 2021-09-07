@@ -26,12 +26,12 @@
 			<table class="table table-bordered table-striped table-hover table-responsive-xl">
 				<thead class="thead-dark">
 					<tr>
-						<th th:replace="fragments :: column_link('id', 'ID', 'brands', 'none')" />
+						<th class="hideable-column">
+							<th th:replace="fragments :: column_link('id', 'ID', 'brands', 'tag')" />
+						</th>
 						<th>Logo</th>
 						<th th:replace="fragments :: column_link('name', 'Name', 'brands', 'none')" />
-						<th class="hideable-column">
-							<th th:remove="tag">Categories</th>
-						</th>
+						<th>Categories</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -44,7 +44,7 @@
 		
 		<!--User data table - mobile responsive-->
 		<div class="less-details">
-			
+			<tr th:replace="brands/brands_fragments :: less_detail_div_link" />
 		</div>
 	</div>
 	

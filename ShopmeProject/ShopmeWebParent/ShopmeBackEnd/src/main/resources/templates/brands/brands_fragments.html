@@ -3,7 +3,7 @@
 
 <body>
 	<tr th:fragment="full_detail_tr_link()" th:each="brand : ${brandsList}">
-		<td>[[${brand.id}]]</td>
+		<td class="hideable-column">[[${brand.id}]]</td>
 		<td>
 			<img th:src="@{${brand.logoPath}}" class="img-fluid" style="width: 96px; height: 96px;" />
 		</td>
@@ -21,19 +21,15 @@
 	</tr>
 	
 	<div th:fragment="less_detail_div_link()">
-		<div th:each="category : ${categoriesList}" class="row m-1">
+		<div th:each="brand : ${brandsList}" class="row m-1">
 			<div class="col-4">
-				<img th:src="@{${category.imagePath}}" class="img-fluid" style="width: 96px; height: 96px;" />
+				<img th:src="@{${brand.logoPath}}" class="img-fluid" style="width: 96px; height: 96px;" />
 			</div>
 			<div class="col-8">
-				<div>[[${category.name}]]</div>
+				<div>[[${brand.name}]]</div>
 				<div class="mt-2">
 					<th:block 
-						th:replace="fragments :: enable_status(${category.enabled}, 'Category', '/category/' + ${category.id})">
-					</th:block>
-					&nbsp;
-					<th:block 
-						th:replace="fragments :: actions('Category', 'Category', 'category', ${category.id}, ${!category.aParent})">
+						th:replace="fragments :: actions('Brand', 'Brand', 'brands', ${brand.id}, true)">
 					</th:block>
 				</div>
 			</div>
