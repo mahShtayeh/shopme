@@ -21,8 +21,10 @@ public class BrandService {
 	@Autowired
 	private BrandRepository repo; 
 	
-	public Page<Brand> getBrandsByPage(int pageNum) {
-		Sort sort = Sort.by("name").ascending(); 
+	public Page<Brand> getBrandsByPage(int pageNum, String sortField, String sortDir) {
+		Sort sort = Sort.by(sortField); 
+		
+		sort = sortDir.equals("desc") ? sort.descending() : sort.ascending(); 
 		
 		Pageable pageConf = PageRequest.of(pageNum - 1, BrandService.BRANDS_BER_PAGE, sort); 
 		return repo.findAll(pageConf); 

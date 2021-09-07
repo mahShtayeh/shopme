@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -36,20 +37,24 @@ public class BrandController {
 	
 	@GetMapping
 	public String getBrands(Model model) {
-		return getBrandsByPage(1, model); 
+		return getBrandsByPage(1, "name", "asc", model); 
 	}
 	
 	@GetMapping("/page/{pageNum}")
 	public String getBrandsByPage(
 			@PathVariable int pageNum, 
+			@Param("sortField") String sortField, 
+			@Param("sortDir") String sortDir, 
 			Model model) {
 		
-		Page<Brand> brandsPage = service.getBrandsByPage(pageNum); 
+		Page<Brand> brandsPage = service.getBrandsByPage(pageNum, sortField, sortDir); 
 		
 		long startCount = (pageNum -1) * BrandService.BRANDS_BER_PAGE + 1;
 		long endCount = startCount + BrandService.BRANDS_BER_PAGE - 1; 
 		if(endCount > brandsPage.getTotalElements()) 
 			endCount = brandsPage.getTotalElements(); 
+		
+		String reverseSortDir = sortDir.equals("desc") ? "asc" : "desc"; 
 		
 		model.addAttribute("totalPages", brandsPage.getTotalPages()); 
 		model.addAttribute("currentPage", pageNum); 
@@ -57,6 +62,9 @@ public class BrandController {
 		model.addAttribute("endCount", endCount); 
 		model.addAttribute("brandsList", brandsPage.getContent()); 
 		model.addAttribute("totalItems", brandsPage.getTotalElements()); 
+		model.addAttribute("sortField", sortField); 
+		model.addAttribute("sortDir", sortDir); 
+		model.addAttribute("reverseSortDir", reverseSortDir); 
 		
 		return "brands/brands";
 	}
@@ -118,9 +126,7 @@ public class BrandController {
 		redirectAttributes.addFlashAttribute("message", 
 				"The Brand [" + brand.getName() + "] has been saved successfully"); 
 		
-		return "redirect:/brands/page/1"; 
-		
-		//return getRedirectUrlToAffectedCategory(brand); 
+		return getRedirectUrlToAffectedCategory(brand); 
 	} 
 	
 	@GetMapping("/delete/{id}")
@@ -142,6 +148,8 @@ public class BrandController {
 	
 	private String getRedirectUrlToAffectedCategory(Brand brand) {
 		String brandName = brand.getName(); 
-		return "redirect:/brand/page/1?sortField=name&sortDir=asc&keyword=" + brandName;
+		
+		return "redirect:/brand/page/1?sortField=name&sortDir=asc";
+//		return "redirect:/brand/page/1?sortField=name&sortDir=asc&keyword=" + brandName;
 	}
 }
