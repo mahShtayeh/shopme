@@ -130,7 +130,7 @@ public class CategoryController {
 			
 			model.addAttribute("category", category); 
 			model.addAttribute("categoriesList", categoriesList);
-			model.addAttribute("pageTitle", "Edit Category(ID: " + id + ")"); 
+			model.addAttribute("pageTitle", "Edit Category (ID: " + id + ")"); 
 			
 			return "category/category_form"; 
 		} catch (CategoryNotFoundException e) {

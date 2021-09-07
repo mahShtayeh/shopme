@@ -8,4 +8,6 @@ import com.shopme.common.entity.Brand;
 
 public interface BrandRepository extends PagingAndSortingRepository<Brand, Integer> {
 	public Page<Brand> findAll(Pageable pageable); 
+	public Brand findByName(String name); 
+	public Long countById(Integer id); 
 }

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+t<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
 	<head th:replace="fragments :: page_head(${pageTitle})"/>
@@ -30,7 +30,7 @@
 						<label class="col-sm-4 col-form-label">Logo: </label>
 						<div class="col-sm-8">
 							<input type="hidden" th:field="*{logo}" />
-							<input id="fileImage" name="logo" type="file" accept="image/jpeg, image/png"
+							<input id="fileImage" name="logoFile" type="file" accept="image/jpeg, image/png"
 								class="mb-2" th:required="${brand.id == null}" />
 							<img id="thumbnail" alt="Image thumbnail" th:src="@{${brand.logoPath}}" 
 								class="img-fluid" />
@@ -40,7 +40,8 @@
 					<div class="form-group row">
 						<label class="col-sm-4 col-form-label">Categories: <br>&lt;Select one or more&gt;</label>
 						<div class="col-sm-8">
-							<select class="form-control" th:field="*{categories}" style="resize: vertical; height: 200px;" multiple>
+							<select class="form-control" th:field="*{categories}" 
+								style="resize: vertical; height: 200px;" multiple required>
 								<option th:each="category : ${categoriesList}" th:value="${category.id}">
 									[[${category.name}]]
 								</option>
@@ -51,7 +52,10 @@
 					<div class="form-group row">
 						<label class="col-sm-4 col-form-label">Chosen Categories: </label>
 						<div id="chosenCategories" class="col-sm-8">
-							
+							<th:span th:each="category : ${brand.categories}" 
+								class="badge badge-secondary m-1">
+								[[${category}]]
+							</th:span>
 						</div>
 					</div>
 					
@@ -100,7 +104,7 @@
 				
 				csrfValue = $("input[name='_csrf']").val(); 
 				
-				url = "[[@{/brand/check_unique}]]"; 
+				url = "[[@{/brands/check_unique}]]"; 
 				
 				params = {id: brandID, name: brandName, _csrf: csrfValue}; 
 				
