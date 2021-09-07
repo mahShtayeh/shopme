@@ -43,17 +43,14 @@ public class BrandService {
 	}
 	
 	public String isBrandUnique(Integer id, String name) {
+		boolean isCreatingNewBrand = (id == null || id == 0); 
+		
 		Brand brandByName = repo.findByName(name); 
 		
-		if(brandByName == null) return "OK"; 
-		
-		boolean isCreatingNewBrand = (id == null); 
-		
 		if(isCreatingNewBrand) {
-			return "Dublicated"; 
+			if(brandByName != null) return "Dublicated"; 
 		} else {
-			if(brandByName.getId() != id) 
-				return "Dublicated"; 
+			if(brandByName != null && brandByName.getId() != id) return "Dublicated"; 
 		}
 		
 		return "OK"; 

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -31,9 +32,23 @@ public class BrandServiceTest {
 	public void checkNewBrandUnique() {
 		Integer id = null; 
 		String name = "Acer"; 
+		Brand brand = new Brand(id, name); 
+		
+		Mockito.when(repo.findByName(name)).thenReturn(brand); 
 		
 		String result = service.isBrandUnique(id, name); 
-		
 		assertThat(result).isEqualTo("Dublicated"); 
+	}
+	
+	@Test
+	public void checkEditBrandUnique() {
+		Integer id = 1; 
+		String name = "Acer"; 
+		Brand brand = new Brand(id, name); 
+		
+		Mockito.when(repo.findByName(name)).thenReturn(brand); 
+		
+		String result = service.isBrandUnique(id, name); 
+		assertThat(result).isEqualTo("OK"); 
 	}
 }
