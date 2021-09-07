@@ -37,7 +37,7 @@ public class BrandController {
 	
 	@GetMapping
 	public String getBrands(Model model) {
-		return getBrandsByPage(1, "name", "asc", model); 
+		return getBrandsByPage(1, "name", "asc", null, model); 
 	}
 	
 	@GetMapping("/page/{pageNum}")
@@ -45,9 +45,10 @@ public class BrandController {
 			@PathVariable int pageNum, 
 			@Param("sortField") String sortField, 
 			@Param("sortDir") String sortDir, 
+			@Param("keyword") String keyword, 
 			Model model) {
 		
-		Page<Brand> brandsPage = service.getBrandsByPage(pageNum, sortField, sortDir); 
+		Page<Brand> brandsPage = service.getBrandsByPage(pageNum, sortField, sortDir, keyword); 
 		
 		long startCount = (pageNum -1) * BrandService.BRANDS_BER_PAGE + 1;
 		long endCount = startCount + BrandService.BRANDS_BER_PAGE - 1; 
@@ -65,6 +66,7 @@ public class BrandController {
 		model.addAttribute("sortField", sortField); 
 		model.addAttribute("sortDir", sortDir); 
 		model.addAttribute("reverseSortDir", reverseSortDir); 
+		model.addAttribute("keyword", keyword); 
 		
 		return "brands/brands";
 	}
@@ -149,7 +151,6 @@ public class BrandController {
 	private String getRedirectUrlToAffectedCategory(Brand brand) {
 		String brandName = brand.getName(); 
 		
-		return "redirect:/brand/page/1?sortField=name&sortDir=asc";
-//		return "redirect:/brand/page/1?sortField=name&sortDir=asc&keyword=" + brandName;
+		return "redirect:/brands/page/1?sortField=name&sortDir=asc&keyword=" + brandName;
 	}
 }

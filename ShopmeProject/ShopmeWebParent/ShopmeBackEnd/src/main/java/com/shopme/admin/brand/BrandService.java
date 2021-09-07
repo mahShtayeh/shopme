@@ -16,18 +16,22 @@ import com.shopme.common.entity.User;
 @Service
 public class BrandService {
 	
-	public final static int BRANDS_BER_PAGE = 4; 
+	public final static int BRANDS_BER_PAGE = 2; 
 	
 	@Autowired
 	private BrandRepository repo; 
 	
-	public Page<Brand> getBrandsByPage(int pageNum, String sortField, String sortDir) {
+	public Page<Brand> getBrandsByPage(int pageNum, String sortField, String sortDir, String keyword) {
 		Sort sort = Sort.by(sortField); 
 		
 		sort = sortDir.equals("desc") ? sort.descending() : sort.ascending(); 
 		
 		Pageable pageConf = PageRequest.of(pageNum - 1, BrandService.BRANDS_BER_PAGE, sort); 
-		return repo.findAll(pageConf); 
+		
+		if(keyword == null) 
+			return repo.findAll(pageConf); 
+		
+		return repo.searchForBrand(keyword, pageConf); 
 	}
 	
 	public Brand getBrandById(Integer id) throws BrandNotFoundException {
