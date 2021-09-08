@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+	<tr th:fragment="full_detail_tr_link()" th:each="product : ${productsList}">
+		<td>[[${product.id}]]</td>
+		<td>
+			<img th:src="@{images/default-logo.png}" class="img-fluid" style="width: 96px; height: 96px;" />
+		</td>
+		<td>[[${product.name}]]</td>
+		<td>[[${product.brand.name}]]</td>
+		<td>[[${product.category}]]</td>
+		<td>
+			<th:block th:replace="fragments :: enable_status(${product.enabled}, 'Product', '/products/' + ${product.id})"></th:block>
+		</td>
+		<td>
+			<a class="fas fa-file-alt fa-2x"
+				th:href="@{'/products/detials/' + ${product.id}}"
+				title="View details of this product"></a>
+			&nbsp;&nbsp;
+			<th:block th:replace="fragments :: actions('Product', 'Product', 'products', ${product.id}, true)"></th:block>
+		</td>
+	</tr>
+	
+	<div th:fragment="less_detail_div_link()">
+		<div th:each="category : ${categoriesList}" class="row m-1">
+			<div class="col-4">
+				<img th:src="@{${category.imagePath}}" class="img-fluid" style="width: 96px; height: 96px;" />
+			</div>
+			<div class="col-8">
+				<div>[[${category.name}]]</div>
+				<div class="mt-2">
+					<th:block 
+						th:replace="fragments :: enable_status(${category.enabled}, 'Category', '/category/' + ${category.id})">
+					</th:block>
+					&nbsp;
+					<th:block 
+						th:replace="fragments :: actions('Category', 'Category', 'category', ${category.id}, ${!category.aParent})">
+					</th:block>
+				</div>
+			</div>
+			<div>&nbsp;</div>
+		</div>
+	</div>
+</body>
+
+</html>
