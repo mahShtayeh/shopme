@@ -1,5 +1,6 @@
 package com.shopme.admin.brand;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,5 +72,9 @@ public class BrandService {
 		}
 
 		repo.deleteById(id);
+	}
+
+	public List<Brand> getBrandsListOrderedByName() {
+		return repo.findByOrderByName(); 
 	}
 }

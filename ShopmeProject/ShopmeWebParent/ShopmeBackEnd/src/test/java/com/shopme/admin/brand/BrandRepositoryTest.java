@@ -62,6 +62,15 @@ public class BrandRepositoryTest {
 	}
 	
 	@Test
+	public void testListBrandsDetailsOrderedByName() {
+		 Iterable<Brand> allBrands = repo.findByOrderByName(); 
+		 
+		 for (Brand brand : allBrands) {
+			System.out.println(brand);
+		}
+	}
+	
+	@Test
 	public void testGetBrandById() {
 		 Brand brand = repo.findById(1).get(); 
 		 
